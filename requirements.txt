@@ -1,0 +1,18 @@
+# To create the wav file
+scipy
+setuptools 
+wheel
+
+# To search the answer on wikipedia
+wikipedia 
+
+# Spacy library
+spacy
+
+# Vosk library
+vosk
+# Libraries to use "bert-large-cased-whole-word-masking-finetuned-squad" model
+transformers
+torch
+torchvision --extra-index-url https://download.pytorch.org/whl/cpu
+torchaudio --extra-index-url https://download.pytorch.org/whl/cpu

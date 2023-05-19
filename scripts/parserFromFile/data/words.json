@@ -1,0 +1,181 @@
+{
+    "drink": [
+        {
+            "label": "Wine"
+        },
+        {
+            "label": "Coffee"
+        },
+        {
+            "label": "Lemonade"
+        },
+        {
+            "label": "Iced tea"
+        },
+        {
+            "label": "Hot chocolate"
+        },
+        {
+            "label": "Juice"
+        },
+        {
+            "label": "Milkshake"
+        },
+        {
+            "label": "Water"
+        },
+        {
+            "label": "Tea"
+        },
+        {
+            "label": "Milk"
+        },
+        {
+            "label": "Beer"
+        },
+        {
+            "label": "Soda"
+        },
+        {
+            "label": "Coffee"
+        },
+        {
+            "label": "Tea bag"
+        },
+        {
+            "label": "Tea"
+        },
+        {
+            "label": "Green tea"
+        },
+        {
+            "label": "Chocolate milk"
+        },
+        {
+            "label": "Hot chocolate"
+        },
+        {
+            "label": "Tomato juice"
+        },
+        {
+            "label": "Smoothie"
+        },
+        {
+            "label": "Milkshake"
+        },
+        {
+            "label": "Coconut milk"
+        },
+        {
+            "label": "Orange juice"
+        },
+        {
+            "label": "Lemonade"
+        },
+        {
+            "label": "Fruit juice"
+        },
+        {
+            "label": "Coke"
+        },
+        {
+            "label": "Cocoa"
+        },
+        {
+            "label": "Water"
+        }
+    ],
+    "start": [
+        {
+            "label": "start"
+        },
+        {
+            "label": "task"
+        }
+    ],
+    "name": [
+        {
+            "label": "James"
+        },
+        {
+            "label": "Robert"
+        },
+        {
+            "label": "John"
+        },
+        {
+            "label": "Michael"
+        },
+        {
+            "label": "David"
+        },
+        {
+            "label": "William"
+        },
+        {
+            "label": "Richard"
+        },
+        {
+            "label": "Joseph"
+        },
+        {
+            "label": "Thomas"
+        },
+        {
+            "label": "Charles"
+        },
+        {
+            "label": "Christopher"
+        },
+        {
+            "label": "Daniel"
+        },
+        {
+            "label": "Matthew"
+        },
+        {
+            "label": "Anthony"
+        },
+        {
+            "label": "Mark"
+        },
+        {
+            "label": "Donald"
+        },
+        {
+            "label": "Steven"
+        },
+        {
+            "label": "Paul"
+        },
+        {
+            "label": "Andrew"
+        },
+        {
+            "label": "Joshua"
+        },
+        {
+            "label": "Kenneth"
+        },
+        {
+            "label": "Kevin"
+        },
+        {
+            "label": "Brian"
+        },
+        {
+            "label": "George"
+        },
+        {
+            "label": "Timothy"
+        },
+        {
+            "label": "Ronald"
+        }
+    ],
+    "confirmation" : [
+        {"label": "Yes"},
+        {"label": "No"}
+    ]
+
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="pepper" default="true" doc="is the node running on the robot or not"/>
+
+    <group if="$(arg pepper)">
+        <node pkg="dialog_pepper" type="SpeechToText.py" name="speech_to_text" output="screen"/>
+        <node pkg="dialog_pepper" type="TTS.py" name="tts" output="screen"/>
+        <node pkg="dialog_pepper" type="TranscriptIntent.py" name="transcript_intent" output="screen"/>
+        <node pkg="dialog_pepper" type="ParserFromFile.py" name="parser_from_file" output="screen"/>
+	</group>
+    <group unless="$(arg pepper)">
+        <node pkg="dialog_pepper" type="whisper.py" name="whisper" output="screen"/>
+	</group>
+</launch>
