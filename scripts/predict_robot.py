@@ -281,31 +281,34 @@ class CommandProcessor(object):
         return res
     
     def get_res(self, line):
-        token_lst = [ele[1:-1].split(':')
-                     for ele in line.split() if ele[0] == '[']
-        res = []
-        # print(token_lst)
-        for token in token_lst:
-            word = token[0]
-            if '(' in word:
-                word = word[word.index('(')+1: word.index(')')]
-            intent = token[1]
-            slot = token[2]
-            if intent[0] == 'B':
-                res.append({'intent': intent[2:]})
-                if slot[0] == 'B' or slot[0] == 'I':
-                    if slot[2:] not in res[-1].keys():
-                        res[-1].update({slot[2:]: word})
-                    else:
-                        res[-1][slot[2:]] = res[-1][slot[2:]] + ' ' + word
-            else:
-                # res[-1].update({'intent': intent[2:]})
-                if slot[0] == 'B' or slot[0] == 'I':
-                    if slot[2:] not in res[-1].keys():
-                        res[-1].update({slot[2:]: word})
-                    else:
-                        res[-1][slot[2:]] = res[-1][slot[2:]] + ' ' + word
-        return res
+        try:
+            token_lst = [ele[1:-1].split(':')
+                        for ele in line.split() if ele[0] == '[']
+            res = []
+            # print(token_lst)
+            for token in token_lst:
+                word = token[0]
+                if '(' in word:
+                    word = word[word.index('(')+1: word.index(')')]
+                intent = token[1]
+                slot = token[2]
+                if intent[0] == 'B':
+                    res.append({'intent': intent[2:]})
+                    if slot[0] == 'B' or slot[0] == 'I':
+                        if slot[2:] not in res[-1].keys():
+                            res[-1].update({slot[2:]: word})
+                        else:
+                            res[-1][slot[2:]] = res[-1][slot[2:]] + ' ' + word
+                else:
+                    # res[-1].update({'intent': intent[2:]})
+                    if slot[0] == 'B' or slot[0] == 'I':
+                        if slot[2:] not in res[-1].keys():
+                            res[-1].update({slot[2:]: word})
+                        else:
+                            res[-1][slot[2:]] = res[-1][slot[2:]] + ' ' + word
+            return res
+        except Exception as e:
+            print("Generating intents fail: ",e)
 
     def get_readable_outputs(self, slot_preds_list, intent_token_preds_list, referee_preds_list,lines):
         words = lines#self.read_input_file()
