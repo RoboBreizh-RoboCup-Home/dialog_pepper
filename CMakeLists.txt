@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   geometry_msgs
-  robobreizh_msgs
+  message_generation
   # naoqi_libqi
 )
 
@@ -52,18 +52,18 @@ catkin_python_setup()
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-  #  FILES
-  #  Speech_processing.msg
-# )
+add_message_files(
+   FILES
+   Speech_processing.msg
+)
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-  # FILES
-  # Msg.srv
-  # TranscriptIntent.srv
-  # TranscriptContains.srv
-# )
+add_service_files(
+  FILES
+  Msg.srv
+  TranscriptIntent.srv
+  TranscriptContains.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -72,11 +72,11 @@ catkin_python_setup()
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#    DEPENDENCIES
-#    std_msgs
-#    geometry_msgs  # Or other packages containing msgs
-# )
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+   geometry_msgs  # Or other packages containing msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -112,6 +112,7 @@ catkin_package(
 #  LIBRARIES perception_pepper
 #  CATKIN_DEPENDS rospy
 #  DEPENDS system_lib
+CATKIN_DEPENDS message_runtime
 )
 
 ###########
@@ -175,7 +176,7 @@ catkin_install_python(PROGRAMS
   scripts/SpeechToText.py
   scripts/sound_buffer_pub.py
   scripts/whisper_node.py
-  scripts/speech_to_wav_service_node.py
+  scripts/speech_to_wav_action_node.py
   scripts/TranscriptIntent.py
   scripts/parserFromFile/ParserFromFile.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
