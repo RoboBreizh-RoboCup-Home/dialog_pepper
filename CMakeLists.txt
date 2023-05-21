@@ -52,18 +52,10 @@ catkin_python_setup()
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-   FILES
-   Speech_processing.msg
-)
+
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  Msg.srv
-  TranscriptIntent.srv
-  TranscriptContains.srv
-)
+
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -72,11 +64,7 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-   DEPENDENCIES
-   std_msgs
-   geometry_msgs  # Or other packages containing msgs
-)
+
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -112,7 +100,7 @@ catkin_package(
 #  LIBRARIES perception_pepper
 #  CATKIN_DEPENDS rospy
 #  DEPENDS system_lib
-CATKIN_DEPENDS message_runtime
+# CATKIN_DEPENDS message_runtime
 )
 
 ###########
