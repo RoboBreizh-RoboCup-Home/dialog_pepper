@@ -1,5 +1,5 @@
 import rospy
-from robobreizh_msgs.srv import *
+from dialog_pepper.srv import *
 from dialog_utils.utils import *
 from parserFromFile.data.common import *
 

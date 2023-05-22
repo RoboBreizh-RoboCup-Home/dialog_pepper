@@ -59,6 +59,7 @@ class pro_classifier_np():
 class CommandProcessor(object):
     def __init__(self,model_path,slot_classifier_path,intent_token_classifier_path,
                   pro_classifier_path,quantized = True, gpu = False,model_name = 'distil_bert'):
+        # self.tokenizer_name = 'bert-base-uncased'
         self.model_path = model_path
         self.slot_classifier_path = slot_classifier_path
         self.intent_token_classifier_path = intent_token_classifier_path
@@ -102,16 +103,22 @@ class CommandProcessor(object):
         #     self.output_file = f'models_outputs/{model_name}_onnx_outputs'
 
         # TODO the following paths should be arguments set from the class constructor
-        self.bert_ort_session = self.initONNX(f'{model_path}')
+        if quantized:
+            self.bert_ort_session = self.initONNX(
+                f'/{model_path}')
         self.slot_classifier = slot_classifier_np(
-            f'{slot_classifier_path}')
+            f'/{slot_classifier_path}')
         self.intent_token_classifier = intent_token_classifier_np(
-            f'{intent_token_classifier_path}')
+            f'/{intent_token_classifier_path}')
         self.pro_classifier = pro_classifier_np(f'/{pro_classifier_path}')
 
     def initONNX(self, path):
         start = time.time()
         sess_options = onnxruntime.SessionOptions()
+
+        # print(onnxruntime.get_available_providers())
+        # assert 'CUDAExecutionProvider' in onnxruntime.get_available_providers()
+        # device_name = 'gpu'
 
         if self.gpu:
             provider = 'CUDAExecutionProvider'
@@ -128,6 +135,11 @@ class CommandProcessor(object):
             path, sess_options, providers=[provider])
         print("Loading time ONNX: ", time.time() - start)
         return ort_session
+
+    # def read_input_file(self):
+    #     with open(self.input_text_path, "r", encoding="utf-8") as f:
+    #         words = f.readline().strip().split()
+    #     return words
 
     def convert_input_file_to_dataloader(self, words,
                                          cls_token_segment_id=0,
@@ -206,8 +218,8 @@ class CommandProcessor(object):
         attention_mask = np.array(attention_mask).astype('int64')
         token_type_ids = np.array(token_type_ids).astype('int64')
         pro_labels_ids = np.array(pro_labels_ids).astype('int64')
-        # sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,
-        #                                                                             :], 'token_type_ids': token_type_ids[None, :]}
+        sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,
+                                                                                    :], 'token_type_ids': token_type_ids[None, :]}
 
         sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,:]}
 
@@ -239,7 +251,6 @@ class CommandProcessor(object):
 
         # ============================= Pronoun referee prediction ==============================
         if any(pro_labels_ids):
-            
             sq_sequence_output = np.squeeze(sequence_output)
             pro_token = sq_sequence_output[pro_labels_ids == 1]
 
@@ -281,34 +292,31 @@ class CommandProcessor(object):
         return res
     
     def get_res(self, line):
-        try:
-            token_lst = [ele[1:-1].split(':')
-                        for ele in line.split() if ele[0] == '[']
-            res = []
-            # print(token_lst)
-            for token in token_lst:
-                word = token[0]
-                if '(' in word:
-                    word = word[word.index('(')+1: word.index(')')]
-                intent = token[1]
-                slot = token[2]
-                if intent[0] == 'B':
-                    res.append({'intent': intent[2:]})
-                    if slot[0] == 'B' or slot[0] == 'I':
-                        if slot[2:] not in res[-1].keys():
-                            res[-1].update({slot[2:]: word})
-                        else:
-                            res[-1][slot[2:]] = res[-1][slot[2:]] + ' ' + word
-                else:
-                    # res[-1].update({'intent': intent[2:]})
-                    if slot[0] == 'B' or slot[0] == 'I':
-                        if slot[2:] not in res[-1].keys():
-                            res[-1].update({slot[2:]: word})
-                        else:
-                            res[-1][slot[2:]] = res[-1][slot[2:]] + ' ' + word
-            return res
-        except Exception as e:
-            print("Generating intents fail: ",e)
+        token_lst = [ele[1:-1].split(':')
+                     for ele in line.split() if ele[0] == '[']
+        res = []
+        # print(token_lst)
+        for token in token_lst:
+            word = token[0]
+            if '(' in word:
+                word = word[word.index('(')+1: word.index(')')]
+            intent = token[1]
+            slot = token[2]
+            if intent[0] == 'B':
+                res.append({'intent': intent[2:]})
+                if slot[0] == 'B' or slot[0] == 'I':
+                    if slot[2:] not in res[-1].keys():
+                        res[-1].update({slot[2:]: word})
+                    else:
+                        res[-1][slot[2:]] = res[-1][slot[2:]] + ' ' + word
+            else:
+                # res[-1].update({'intent': intent[2:]})
+                if slot[0] == 'B' or slot[0] == 'I':
+                    if slot[2:] not in res[-1].keys():
+                        res[-1].update({slot[2:]: word})
+                    else:
+                        res[-1][slot[2:]] = res[-1][slot[2:]] + ' ' + word
+        return res
 
     def get_readable_outputs(self, slot_preds_list, intent_token_preds_list, referee_preds_list,lines):
         words = lines#self.read_input_file()
@@ -327,16 +335,12 @@ class CommandProcessor(object):
                     line = line + "[{}({}):{}:{}] ".format(word,
                                                            words[r_idx], i_pred, s_pred)
 
-        line = line.strip() + '\n'  
-        res = self.get_res(line)
-        res = [str(d)+'\n' for d in res]
-        res = ''.join(res)
-
-        return res.strip()
+        
+        return line
 
 
 if __name__ == "__main__":
-    base_model_type = 'destil_bert'
+    base_model_type = 'bert'
     quantized = True
     gpu = True
 
