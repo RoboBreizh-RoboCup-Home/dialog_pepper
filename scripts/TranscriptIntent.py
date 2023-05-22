@@ -13,14 +13,14 @@ import spacy
 class Intent():
     def __init__(self):
         model_name='distil_bert'
-        model_path = os.path.join(get_pkg_path(), 'scripts/quantized_models/distil_bert.quant.onnx')
+        model_path = os.path.join(get_pkg_path(), 'scripts/quantized_models/distil_bert.onnx')
         slot_classifier_path = os.path.join(get_pkg_path(), 'scripts/numpy_para/slot_classifier')
         intent_token_classifier_path = os.path.join(
             get_pkg_path(), 'scripts/numpy_para/intent_token_classifier')
         pro_classifier_path = os.path.join(get_pkg_path(), 'scripts/numpy_para/pro_classifier')
         self.parser = CommandProcessor(model_path=model_path, slot_classifier_path=slot_classifier_path,
                                        intent_token_classifier_path=intent_token_classifier_path,
-                                       pro_classifier_path=pro_classifier_path,quantized = True, gpu = False, model_name=model_name)
+                                       pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=model_name)
         self.module_name = "TranscriptIntent"
         self.spacy_descr = spacy.load('en_core_web_sm')
 
@@ -33,10 +33,7 @@ class Intent():
             req.transcript = 'Find the person wearing a red shirt' #####################
             # -------------------------
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
-            
-            print(parser_intent)####################
-
-
+            print(parser_intent)
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing Done..."+W)
             rospy.loginfo(
                 B+"[Robobreizh - Dialog] Recognized text: " + W + parser_intent)

@@ -59,7 +59,6 @@ class pro_classifier_np():
 class CommandProcessor(object):
     def __init__(self,model_path,slot_classifier_path,intent_token_classifier_path,
                   pro_classifier_path,quantized = True, gpu = False,model_name = 'distil_bert'):
-        # self.tokenizer_name = 'bert-base-uncased'
         self.model_path = model_path
         self.slot_classifier_path = slot_classifier_path
         self.intent_token_classifier_path = intent_token_classifier_path
@@ -103,13 +102,11 @@ class CommandProcessor(object):
         #     self.output_file = f'models_outputs/{model_name}_onnx_outputs'
 
         # TODO the following paths should be arguments set from the class constructor
-        if quantized:
-            self.bert_ort_session = self.initONNX(
-                f'/{model_path}')
+        self.bert_ort_session = self.initONNX(f'{model_path}')
         self.slot_classifier = slot_classifier_np(
-            f'/{slot_classifier_path}')
+            f'{slot_classifier_path}')
         self.intent_token_classifier = intent_token_classifier_np(
-            f'/{intent_token_classifier_path}')
+            f'{intent_token_classifier_path}')
         self.pro_classifier = pro_classifier_np(f'/{pro_classifier_path}')
 
     def initONNX(self, path):
@@ -218,8 +215,10 @@ class CommandProcessor(object):
         attention_mask = np.array(attention_mask).astype('int64')
         token_type_ids = np.array(token_type_ids).astype('int64')
         pro_labels_ids = np.array(pro_labels_ids).astype('int64')
-        sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,
-                                                                                    :], 'token_type_ids': token_type_ids[None, :]}
+        # sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,
+        #                                                                             :], 'token_type_ids': token_type_ids[None, :]}
+
+        sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,:]}
 
         sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,:]}
 
@@ -251,6 +250,7 @@ class CommandProcessor(object):
 
         # ============================= Pronoun referee prediction ==============================
         if any(pro_labels_ids):
+            
             sq_sequence_output = np.squeeze(sequence_output)
             pro_token = sq_sequence_output[pro_labels_ids == 1]
 
@@ -335,12 +335,16 @@ class CommandProcessor(object):
                     line = line + "[{}({}):{}:{}] ".format(word,
                                                            words[r_idx], i_pred, s_pred)
 
-        
-        return line
+        line = line.strip() + '\n'  
+        res = self.get_res(line)
+        res = [str(d)+'\n' for d in res]
+        res = ''.join(res)
+
+        return res.strip()
 
 
 if __name__ == "__main__":
-    base_model_type = 'bert'
+    base_model_type = 'destil_bert'
     quantized = True
     gpu = True
 
