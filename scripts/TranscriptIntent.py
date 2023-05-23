@@ -8,7 +8,7 @@ from robobreizh_msgs.srv import *
 from predict_robot import CommandProcessor
 import spacy
 import json 
-
+import re
 
 class Intent():
     def __init__(self):
@@ -29,9 +29,10 @@ class Intent():
         try:
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing intent..."+W)
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
-            
+            parser_intent = re.sub("''","'",parser_intent)
             task_lst = parser_intent.split('{')
             task_descr_lst = task_lst.copy()
+            print(task_descr_lst)
             for i,task in enumerate(task_lst):
                 task_dict = json.loads(task)
                 for k in task_dict.keys():
