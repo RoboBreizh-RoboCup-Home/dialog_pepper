@@ -51,7 +51,7 @@ class Intent():
 
                         task_descr_lst[i] = [str(task_dict)]
             
-            print(f'task_descr_lst: {task_descr_lst}')
+            print(f'!! task_descr_lst: {task_descr_lst}')
                             
 
 
