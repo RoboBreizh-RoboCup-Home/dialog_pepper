@@ -30,7 +30,7 @@ class Intent():
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing intent..."+W)
 
             # ------ test descr ------
-            req.transcript = 'Find the person wearing a red shirt' #####################
+            # req.transcript = 'Find the person wearing a red shirt' #####################
             # -------------------------
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
             print(parser_intent)
