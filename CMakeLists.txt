@@ -93,7 +93,6 @@ catkin_package(
 #  LIBRARIES perception_pepper
 #  CATKIN_DEPENDS rospy
 #  DEPENDS system_lib
-CATKIN_DEPENDS message_runtime
 )
 
 ###########
