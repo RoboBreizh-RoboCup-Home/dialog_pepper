@@ -31,6 +31,7 @@ class Intent():
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
             
             print(parser_intent.split('\n'))
+            print(parser_intent.find('{'))
 
             print(parser_intent)
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing Done..."+W)
