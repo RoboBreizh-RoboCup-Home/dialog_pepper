@@ -33,6 +33,7 @@ class Intent():
             # req.transcript = 'Find the person wearing a red shirt' #####################
             # -------------------------
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
+            
             print(parser_intent)
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing Done..."+W)
             rospy.loginfo(
