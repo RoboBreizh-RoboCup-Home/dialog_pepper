@@ -7,7 +7,7 @@ from robobreizh_msgs.srv import *
 # from dialog_pepper.srv import *
 from predict_robot import CommandProcessor
 import spacy
-import ast
+import json 
 
 
 class Intent():
@@ -33,7 +33,7 @@ class Intent():
             task_lst = parser_intent.split('{')
             task_descr_lst = task_lst.copy()
             for i,task in enumerate(task_lst):
-                task_dict = ast.literal_eval(task)
+                task_dict = json.loads(task)
                 for k in task_dict.keys():
                     if k == 'intent':
                         continue
