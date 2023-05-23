@@ -1,4 +1,4 @@
-#!/user/bin/env python
+#!/user/bin python3
 import rospy
 
 from dialog_utils.utils import *
@@ -28,12 +28,10 @@ class Intent():
         # sti ros service callback
         try:
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing intent..."+W)
-
-            # ------ test descr ------
-            # req.transcript = 'Find the person wearing a red shirt' #####################
-            # -------------------------
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
             
+            print(parser_intent.split('\n'))
+
             print(parser_intent)
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing Done..."+W)
             rospy.loginfo(
