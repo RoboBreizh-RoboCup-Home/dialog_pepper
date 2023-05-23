@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   geometry_msgs
-  message_generation
   # naoqi_libqi
 )
 
@@ -51,19 +50,7 @@ catkin_python_setup()
 ##   * uncomment the generate_messages entry below
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
-## Generate messages in the 'msg' folder
-add_message_files(
-   FILES
-   Speech_processing.msg
-)
 
-## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  Msg.srv
-  TranscriptIntent.srv
-  TranscriptContains.srv
-)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -71,12 +58,6 @@ add_service_files(
 #   # Speech_processing.action
 # )
 
-## Generate added messages and services with any dependencies listed here
-generate_messages(
-   DEPENDENCIES
-   std_msgs
-   geometry_msgs  # Or other packages containing msgs
-)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
