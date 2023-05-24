@@ -1,4 +1,0 @@
-string sentence
-int8 mode # 0 = animated, 1 = normal
----
-bool success
