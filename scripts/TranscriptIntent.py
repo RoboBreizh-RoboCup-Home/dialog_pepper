@@ -6,6 +6,8 @@ import os
 from robobreizh_msgs.srv import *
 # from dialog_pepper.srv import *
 from predict_robot import CommandProcessor
+import spacy
+
 
 
 class Intent():
@@ -20,11 +22,16 @@ class Intent():
                                        intent_token_classifier_path=intent_token_classifier_path,
                                        pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=model_name)
         self.module_name = "TranscriptIntent"
+        self.spacy_descr = spacy.load('en_core_web_sm')
 
     def intent_callback(self, req):
         # sti ros service callback
         try:
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing intent..."+W)
+
+            # ------ test descr ------
+            # req.transcript = 'Find the person wearing a red shirt' #####################
+            # -------------------------
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
             print(parser_intent)
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing Done..."+W)
@@ -39,7 +46,7 @@ class Intent():
             return TranscriptIntentResponse(parser_intent)
         except Exception as e:
             raise e
-     
+
     def sendReady(self):
         """
         TO DO : set this function in the appropriate process or find a way for the manager to tell when everything is loaded

@@ -1,7 +1,7 @@
 import qi
 import rospy
 import sys
-from dialog_pepper.srv import Msg, MsgResponse
+from robobreizh_msgs.srv import Msg, MsgResponse
 from dialog_utils.utils import *
 
 

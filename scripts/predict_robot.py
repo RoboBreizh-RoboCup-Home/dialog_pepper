@@ -113,6 +113,10 @@ class CommandProcessor(object):
         start = time.time()
         sess_options = onnxruntime.SessionOptions()
 
+        # print(onnxruntime.get_available_providers())
+        # assert 'CUDAExecutionProvider' in onnxruntime.get_available_providers()
+        # device_name = 'gpu'
+
         if self.gpu:
             provider = 'CUDAExecutionProvider'
         else:
@@ -128,6 +132,11 @@ class CommandProcessor(object):
             path, sess_options, providers=[provider])
         print("Loading time ONNX: ", time.time() - start)
         return ort_session
+
+    # def read_input_file(self):
+    #     with open(self.input_text_path, "r", encoding="utf-8") as f:
+    #         words = f.readline().strip().split()
+    #     return words
 
     def convert_input_file_to_dataloader(self, words,
                                          cls_token_segment_id=0,
@@ -208,6 +217,8 @@ class CommandProcessor(object):
         pro_labels_ids = np.array(pro_labels_ids).astype('int64')
         # sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,
         #                                                                             :], 'token_type_ids': token_type_ids[None, :]}
+
+        sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,:]}
 
         sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,:]}
 
