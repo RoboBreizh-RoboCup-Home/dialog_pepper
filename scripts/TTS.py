@@ -23,7 +23,7 @@ class TTS():
         self.aLTextToSpeech.setLanguage("English")
         self.aLTextToSpeech.setParameter("volume", 100)
         self.aLTextToSpeech.setParameter("pitch", 100)
-        self.aLTextToSpeech.setParameter("speed", 83)
+        self.aLTextToSpeech.setParameter("speed",100)
 
         self.tts_srv = rospy.Service(
             '/robobreizh/dialog_pepper/text_to_speech', Msg, self.speakCb)
