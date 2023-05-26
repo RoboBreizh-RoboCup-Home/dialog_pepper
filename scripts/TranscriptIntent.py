@@ -9,6 +9,7 @@ from predict_robot import CommandProcessor
 import spacy
 import json 
 import re
+import ast
 
 class Intent():
     def __init__(self):
