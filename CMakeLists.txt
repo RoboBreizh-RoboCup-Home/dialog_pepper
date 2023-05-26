@@ -51,14 +51,6 @@ catkin_python_setup()
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 
-
-## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   # Speech_processing.action
-# )
-
-
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
 ################################################
