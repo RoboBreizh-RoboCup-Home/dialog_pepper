@@ -46,6 +46,10 @@ class Intent():
                     if k == 'intent':
                         continue
                     words = task_dict[k]
+
+                    if 'room' in words: # don't need to parse the room
+                        continue
+
                     if len(words.split()) > 1:
                         doc = self.spacy_descr(words)
                         dep_lst = [token.dep_ for token in doc]
@@ -55,9 +59,15 @@ class Intent():
                             task_dict_copy.update({k+'_descr' : words.split()[0]})
 
                         if dep_lst[0] == 'ROOT' and dep_lst[1] == 'acl':
-                            task_dict_copy.update({k+'_descr' : ' '.join(words.split()[1:])})
+                            descr = ' '.join(words.split()[1:])
+                            # task_dict_copy.update({k+'_descr' : descr})
+                            task_dict_copy.update({k+'_descr_verb' : words.split()[1]})
+                            if 'amod' in dep_lst:
+                                task_dict_copy.update({k+'_descr_adj' : words.split()[dep_lst.index('amod')]})
+                            if 'dobj' in dep_lst:
+                                task_dict_copy.update({k+'_descr_key' : words.split()[dep_lst.index('dobj')]})
+
                         task_descr_lst[i] = str(task_dict_copy)
-            
 
             parser_intent = '\n'.join(task_descr_lst)
             # print('\n'.join(task_descr_lst))
