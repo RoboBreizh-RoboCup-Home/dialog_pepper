@@ -6,7 +6,7 @@ import os
 from robobreizh_msgs.srv import *
 # from dialog_pepper.srv import *
 from predict_robot import CommandProcessor
-import spacy
+# import spacy
 
 
 
@@ -22,7 +22,7 @@ class Intent():
                                        intent_token_classifier_path=intent_token_classifier_path,
                                        pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=model_name)
         self.module_name = "TranscriptIntent"
-        self.spacy_descr = spacy.load('en_core_web_sm')
+        # self.spacy_descr = spacy.load('en_core_web_sm')
 
     def intent_callback(self, req):
         # sti ros service callback
