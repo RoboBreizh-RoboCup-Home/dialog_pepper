@@ -50,7 +50,7 @@ class Intent():
                 for k in task_dict.keys():
                     if k == 'intent':
                         if words == 'lead':
-                            task_dict_copy[k] = 'guide'
+                            task_dict_copy.update({k : 'guide'})
                         continue
                     
                     if 'room' in words: # don't need to parse the room
