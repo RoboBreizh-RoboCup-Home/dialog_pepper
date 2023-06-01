@@ -46,8 +46,9 @@ class Intent():
             for i,task in enumerate(task_lst):
                 task_dict = ast.literal_eval(task)
                 task_dict_copy = task_dict.copy()
-                words = task_dict[k]
+                
                 for k in task_dict.keys():
+                    words = task_dict[k]
                     if k == 'intent':
                         if words == 'lead':
                             task_dict_copy.update({k : 'guide'})
