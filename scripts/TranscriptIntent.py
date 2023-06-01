@@ -50,8 +50,8 @@ class Intent():
                 for k in task_dict.keys():
                     words = task_dict[k]
                     if k == 'intent':
-                        if words == 'lead':
-                            task_dict_copy.update({k : 'guide'})
+                        # if words == 'lead': # the verb of lead is not in egpsr, have to fix this manually in gpsr.
+                        #     task_dict_copy.update({k : 'guide'})
                         continue
                     
                     if 'room' in words: # don't need to parse the room

@@ -303,7 +303,12 @@ class CommandProcessor(object):
             intent = token[1]
             slot = token[2]
             if intent[0] == 'B':
-                res.append({'intent': intent[2:]})
+
+                if word == 'lead':
+                    res.append({'intent': 'guide'})
+                else:
+                    res.append({'intent': intent[2:]})
+
                 if slot[0] == 'B' or slot[0] == 'I':
                     if slot[2:] not in res[-1].keys():
                         res[-1].update({slot[2:]: word})
