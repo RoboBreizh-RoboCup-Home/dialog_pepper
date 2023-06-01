@@ -73,7 +73,7 @@ class Intent():
                                 task_dict_copy.update({k+'_position_obj' : words.split()[dep_lst.index('pobj')]})
 
                         if dep_lst[0] == 'amod' and dep_lst[1] == 'ROOT':
-                            task_dict_copy.update({k+'_descr' : words.split()[0]})
+                            task_dict_copy.update({k+'_descr' : words.split()[dep_lst.index('amod')]})
 
                         if dep_lst[0] == 'ROOT' and dep_lst[1] == 'acl':
                             descr = ' '.join(words.split()[1:])
