@@ -87,41 +87,7 @@ class Intent():
                         task_descr_lst[i] = str(task_dict_copy)
 
             parser_intent = '\n'.join(task_descr_lst)
-            # print('\n'.join(task_descr_lst))
-
-
-
-
-
-
-            # parser_intent = re.sub("''","'",parser_intent)
-            # task_lst = parser_intent.split('{')
-            # print(f'task_lst: {task_lst}')
-            # task_descr_lst = task_lst.copy()
-            # print(task_descr_lst)
-            # for i,task in enumerate(task_lst):
-            #     task_dict = json.loads(task)
-            #     for k in task_dict.keys():
-            #         if k == 'intent':
-            #             continue
-            #         words = task_dict[k]
-            #         if len(words.split()) > 1:
-            #             doc = self.spacy_descr(words)
-            #             dep_lst = [token.dep_ for token in doc]
-            #             task_dict[k] = words.split()[dep_lst.index('ROOT')]
-
-            #             if dep_lst[0] == 'amod' and dep_lst[1] == 'ROOT':
-            #                 task_dict[k+'_descr'] = words.split()[0]
-                            
-            #             if dep_lst[0] == 'ROOT' and dep_lst[1] == 'acl':
-            #                 task_dict[k+'_descr'] = words.split()[1:]
-
-            #             task_descr_lst[i] = [str(task_dict)]
-            
-            # print(f'!! task_descr_lst: {task_descr_lst}')
-                            
-
-
+        
               
 
             print(parser_intent)
