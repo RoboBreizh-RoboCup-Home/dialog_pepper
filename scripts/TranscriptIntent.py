@@ -67,10 +67,10 @@ class Intent():
                             task_dict_copy.update({k : ' '.join(words.split()[2:])})
 
                         if len(words.split()) >= 3:
-                            if dep_lst[1] == 'prep' and dep_lst[2] == 'pobj':
+                            if 'prep' in dep_lst and 'pobj' in dep_lst:
                                 task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
-                                task_dict_copy.update({k+'_position' : words.split()[1]})
-                                task_dict_copy.update({k+'_position_obj' : words.split()[2]})
+                                task_dict_copy.update({k+'_position' : words.split()[dep_lst.index('prep')]})
+                                task_dict_copy.update({k+'_position_obj' : words.split()[dep_lst.index('pobj')]})
 
                         if dep_lst[0] == 'amod' and dep_lst[1] == 'ROOT':
                             task_dict_copy.update({k+'_descr' : words.split()[0]})
