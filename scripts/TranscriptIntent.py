@@ -50,10 +50,23 @@ class Intent():
                     if 'room' in words: # don't need to parse the room
                         continue
 
+                    if 'table' in words and len(words.split())>1: # for cases like 'end table', etc
+                        continue
+
                     if len(words.split()) > 1:
                         doc = self.spacy_descr(words)
                         dep_lst = [token.dep_ for token in doc]
                         task_dict_copy[k] = words.split()[dep_lst.index('ROOT')]
+
+                        if 'left most' or 'right most' in words:
+                            task_dict_copy.update({k+'_descr' : ' '.join(words.split()[:2])})
+                            task_dict_copy.update({k : ' '.join(words.split()[2:])})
+
+                        if len(words.split()) >= 3:
+                            if dep_lst[1] == 'prep' and dep_lst[2] == 'pobj':
+                                task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
+                                task_dict_copy.update({k+'_position' : words.split()[1]})
+                                task_dict_copy.update({k+'_position_obj' : words.split()[2]})
 
                         if dep_lst[0] == 'amod' and dep_lst[1] == 'ROOT':
                             task_dict_copy.update({k+'_descr' : words.split()[0]})
