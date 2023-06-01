@@ -62,7 +62,7 @@ class Intent():
                         dep_lst = [token.dep_ for token in doc]
                         task_dict_copy[k] = words.split()[dep_lst.index('ROOT')]
 
-                        if 'left most' or 'right most' in words:
+                        if 'left most' in words or 'right most' in words:
                             task_dict_copy.update({k+'_descr' : ' '.join(words.split()[:2])})
                             task_dict_copy.update({k : ' '.join(words.split()[2:])})
 
