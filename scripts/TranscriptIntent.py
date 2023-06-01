@@ -30,11 +30,10 @@ class Intent():
         try:
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing intent..."+W)
 
-            # ------ test descr ------
-            # req.transcript = 'Find the person wearing a red shirt' #####################
-            # -------------------------
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
             print(parser_intent)
+
+            name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William']
 
 
             parser_intent = re.sub("''","'",parser_intent)
@@ -50,9 +49,14 @@ class Intent():
                 for k in task_dict.keys():
                     words = task_dict[k]
                     if k == 'intent':
-                        # if words == 'lead': # the verb of lead is not in egpsr, have to fix this manually in gpsr.
-                        #     task_dict_copy.update({k : 'guide'})
                         continue
+
+                    if k == 'dest':
+                        if words.split()[0] in name_lst:
+                            print(words.split()[0])
+                            task_dict_copy.update({k : ' '.join(words.split()[1:])})
+                            task_dict_copy.update({k + '_per' : words.split()[0]})
+                            continue
                     
                     if 'room' in words: # don't need to parse the room
                         continue
