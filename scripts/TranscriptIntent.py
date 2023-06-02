@@ -56,7 +56,6 @@ class Intent():
                             print(words.split()[0])
                             task_dict_copy.update({k : ' '.join(words.split()[1:])})
                             task_dict_copy.update({k + '_per' : words.split()[0]})
-                            continue
                     
                     if 'room' in words and len(words.split())==2: # don't need to parse the room
                         continue
