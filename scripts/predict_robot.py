@@ -337,7 +337,7 @@ class CommandProcessor(object):
                         r_idx = token_idx
 
                 else:
-                    print('failed pronoun \n')
+                    print(f'failed pronoun {word}\n')
                     line = line + "[{}({}):{}:{}] ".format(word,
                                                            words[r_idx], i_pred, s_pred)
 
