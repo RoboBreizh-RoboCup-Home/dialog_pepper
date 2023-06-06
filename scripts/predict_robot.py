@@ -327,8 +327,6 @@ class CommandProcessor(object):
         words = lines#self.read_input_file()
         line = ''
         for token_idx, (word, i_pred, s_pred, r_pred) in enumerate(zip(words, intent_token_preds_list, slot_preds_list, referee_preds_list)):
-            if r_pred == 'B-referee':
-                r_idx = token_idx
             if s_pred == 'O' and i_pred == 'O' and r_pred == 'O':
                 line = line + word + " "
             elif i_pred != 'O':
@@ -339,6 +337,8 @@ class CommandProcessor(object):
                         r_idx = token_idx
 
                 else:
+                    r_idx = token_idx
+                    print('failed pronoun \n')
                     line = line + "[{}({}):{}:{}] ".format(word,
                                                            words[r_idx], i_pred, s_pred)
 
