@@ -95,9 +95,11 @@ class Intent():
                                 if 'dobj' in dep_lst:
                                     task_dict_copy.update({k+'_descr_key' : words.split()[dep_lst.index('dobj')]})
                     
+                    # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
                     if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
+                        
                     task_descr_lst[i] = task_dict_copy_string
                     
                     
