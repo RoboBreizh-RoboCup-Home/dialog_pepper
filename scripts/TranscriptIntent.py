@@ -29,12 +29,16 @@ class Intent():
         # sti ros service callback
         try:
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing intent..."+W)
+            
+            raw_request = req.transcript.split()
 
-            # ------ test descr ------
-            # req.transcript = 'Find the person wearing a red shirt' #####################
-            # -------------------------
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
             print(parser_intent)
+
+
+            name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone']
+
+            last_person = None
 
 
             parser_intent = re.sub("''","'",parser_intent)
@@ -46,69 +50,76 @@ class Intent():
             for i,task in enumerate(task_lst):
                 task_dict = ast.literal_eval(task)
                 task_dict_copy = task_dict.copy()
+
+                
                 for k in task_dict.keys():
+
+                    words = task_dict[k]
+                    
                     if k == 'intent':
                         continue
-                    words = task_dict[k]
 
-                    if 'room' in words: # don't need to parse the room
-                        continue
+                    if k == 'dest':
+                        if words.split()[0] in name_lst:
+                            task_dict_copy.update({k : ' '.join(words.split()[1:])})
+                            task_dict_copy.update({k + '_per' : words.split()[0]})
+                            if last_person is not None:
+                                task_dict_copy.update({'per': last_person})
+                        elif 'all the' in words:
+                            # all the elders, women, man, people, children
+                            task_dict_copy.update({k : ' '.join(words.split()[3:])})
+                            task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
 
-                    if len(words.split()) > 1:
-                        doc = self.spacy_descr(words)
-                        dep_lst = [token.dep_ for token in doc]
-                        task_dict_copy[k] = words.split()[dep_lst.index('ROOT')]
+                    else:
+                        
+                        if k == 'per':
+                            last_person = words.split()[-1]
+                    
+                        if 'room' in words and len(words.split())==2: # don't need to parse the room
+                            continue
 
-                        if dep_lst[0] == 'amod' and dep_lst[1] == 'ROOT':
-                            task_dict_copy.update({k+'_descr' : words.split()[0]})
+                        if 'table' in words and len(words.split())==2: # for cases like 'end table', etc
+                            continue
 
-                        if dep_lst[0] == 'ROOT' and dep_lst[1] == 'acl':
-                            descr = ' '.join(words.split()[1:])
-                            # task_dict_copy.update({k+'_descr' : descr})
-                            task_dict_copy.update({k+'_descr_verb' : words.split()[1]})
-                            if 'amod' in dep_lst:
-                                task_dict_copy.update({k+'_descr_adj' : words.split()[dep_lst.index('amod')]})
-                            if 'dobj' in dep_lst:
-                                task_dict_copy.update({k+'_descr_key' : words.split()[dep_lst.index('dobj')]})
+                        if len(words.split()) > 1:
+                            doc = self.spacy_descr(words)
+                            dep_lst = [token.dep_ for token in doc]
+                            task_dict_copy[k] = words.split()[dep_lst.index('ROOT')]
 
-                        task_descr_lst[i] = str(task_dict_copy)
+                            if 'left most' in words or 'right most' in words:
+                                task_dict_copy.update({k+'_descr' : ' '.join(words.split()[:2])})
+                                task_dict_copy.update({k : ' '.join(words.split()[2:])})
+
+                            if len(words.split()) >= 3:
+                                if 'prep' in dep_lst and 'pobj' in dep_lst:
+                                    task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
+                                    task_dict_copy.update({k+'_position' : words.split()[dep_lst.index('prep')]})
+                                    task_dict_copy.update({k+'_position_obj' : words.split()[dep_lst.index('pobj')]})
+
+                            if dep_lst[0] == 'amod' and dep_lst[1] == 'ROOT':
+                                task_dict_copy.update({k+'_descr' : words.split()[dep_lst.index('amod')]})
+
+                            if dep_lst[0] == 'ROOT' and dep_lst[1] == 'acl':
+                                descr = ' '.join(words.split()[1:])
+                                # task_dict_copy.update({k+'_descr' : descr})
+                                task_dict_copy.update({k+'_descr_verb' : words.split()[1]})
+                                if 'amod' in dep_lst:
+                                    task_dict_copy.update({k+'_descr_adj' : words.split()[dep_lst.index('amod')]})
+                                if 'dobj' in dep_lst:
+                                    task_dict_copy.update({k+'_descr_key' : words.split()[dep_lst.index('dobj')]})
+                                        
+                    # for greet and introduce
+                    task_dict_copy_string = str(task_dict_copy)
+                    # if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
+                    if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request:
+                        task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
+                        
+                    task_descr_lst[i] = task_dict_copy_string
+                    
+                    
 
             parser_intent = '\n'.join(task_descr_lst)
-            # print('\n'.join(task_descr_lst))
-
-
-
-
-
-
-            # parser_intent = re.sub("''","'",parser_intent)
-            # task_lst = parser_intent.split('{')
-            # print(f'task_lst: {task_lst}')
-            # task_descr_lst = task_lst.copy()
-            # print(task_descr_lst)
-            # for i,task in enumerate(task_lst):
-            #     task_dict = json.loads(task)
-            #     for k in task_dict.keys():
-            #         if k == 'intent':
-            #             continue
-            #         words = task_dict[k]
-            #         if len(words.split()) > 1:
-            #             doc = self.spacy_descr(words)
-            #             dep_lst = [token.dep_ for token in doc]
-            #             task_dict[k] = words.split()[dep_lst.index('ROOT')]
-
-            #             if dep_lst[0] == 'amod' and dep_lst[1] == 'ROOT':
-            #                 task_dict[k+'_descr'] = words.split()[0]
-                            
-            #             if dep_lst[0] == 'ROOT' and dep_lst[1] == 'acl':
-            #                 task_dict[k+'_descr'] = words.split()[1:]
-
-            #             task_descr_lst[i] = [str(task_dict)]
-            
-            # print(f'!! task_descr_lst: {task_descr_lst}')
-                            
-
-
+        
               
 
             print(parser_intent)
