@@ -29,12 +29,15 @@ class Intent():
         # sti ros service callback
         try:
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing intent..."+W)
+            
+            raw_request = req.transcript.split()
 
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
             print(parser_intent)
 
             name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone']
 
+            last_person = None
 
             parser_intent = re.sub("''","'",parser_intent)
             begin_lst = [m.start() for m in re.finditer('{',parser_intent)]
@@ -47,7 +50,9 @@ class Intent():
                 task_dict_copy = task_dict.copy()
                 
                 for k in task_dict.keys():
+
                     words = task_dict[k]
+                    
                     if k == 'intent':
                         continue
 
@@ -55,12 +60,17 @@ class Intent():
                         if words.split()[0] in name_lst:
                             task_dict_copy.update({k : ' '.join(words.split()[1:])})
                             task_dict_copy.update({k + '_per' : words.split()[0]})
+                            if last_person is not None:
+                                task_dict_copy.update({'per': last_person})
                         elif 'all the' in words:
                             # all the elders, women, man, people, children
                             task_dict_copy.update({k : ' '.join(words.split()[3:])})
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
 
                     else:
+                        
+                        if k == 'per':
+                            last_person = words.split()[-1]
                     
                         if 'room' in words and len(words.split())==2: # don't need to parse the room
                             continue
@@ -94,10 +104,11 @@ class Intent():
                                     task_dict_copy.update({k+'_descr_adj' : words.split()[dep_lst.index('amod')]})
                                 if 'dobj' in dep_lst:
                                     task_dict_copy.update({k+'_descr_key' : words.split()[dep_lst.index('dobj')]})
-                    
+                                        
                     # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
-                    if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
+                    # if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
+                    if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request:
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
                         
                     task_descr_lst[i] = task_dict_copy_string
