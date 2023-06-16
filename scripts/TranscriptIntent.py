@@ -35,9 +35,11 @@ class Intent():
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
             print(parser_intent)
 
+
             name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone']
 
             last_person = None
+
 
             parser_intent = re.sub("''","'",parser_intent)
             begin_lst = [m.start() for m in re.finditer('{',parser_intent)]
@@ -48,6 +50,7 @@ class Intent():
             for i,task in enumerate(task_lst):
                 task_dict = ast.literal_eval(task)
                 task_dict_copy = task_dict.copy()
+
                 
                 for k in task_dict.keys():
 
