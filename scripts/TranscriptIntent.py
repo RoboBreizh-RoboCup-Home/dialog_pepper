@@ -66,6 +66,10 @@ class Intent():
                                 task_dict_copy.update({k : name_values[0]})
                                 task_dict_copy.update({'dest_per' : name_values[1]})
 
+                                # skip the rest
+                                task_descr_lst[i] = task_dict_copy_string
+                                continue
+
                     if k == 'dest':
                         if words.split()[0] in name_lst:
                             task_dict_copy.update({k : ' '.join(words.split()[1:])})
