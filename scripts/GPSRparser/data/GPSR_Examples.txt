@@ -17738,7 +17738,7 @@ Could you please put the potato chips on the desk
 #
 ###############################################################################
 
-Robot please tell me how many people in the bedroom are lying down
+Robot please  me how many people in the bedroom are lying down
 
 
 ###############################################################################
@@ -24358,7 +24358,7 @@ Remarks
 #
 ###############################################################################
 
-Please contact Alex at the exit and introduce it to Michael at the sink
+	Please contact Alex at the exit and introduce it to Michael at the sink
 
 
 ###############################################################################

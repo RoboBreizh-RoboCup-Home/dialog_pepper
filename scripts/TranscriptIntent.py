@@ -111,7 +111,7 @@ class Intent():
                     # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
                     # if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
-                    if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request:
+                    if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in task_dict.keys():
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
                         
                     task_descr_lst[i] = task_dict_copy_string
