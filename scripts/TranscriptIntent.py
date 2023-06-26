@@ -110,7 +110,7 @@ class Intent():
                                         
                     # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
-                    print(f"values: {task_dict.values()}")
+                    print(f"raw request: {raw_request}")
                     # if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
                     if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in task_dict.values():
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
