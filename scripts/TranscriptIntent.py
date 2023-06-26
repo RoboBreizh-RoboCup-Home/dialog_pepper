@@ -110,10 +110,11 @@ class Intent():
                                         
                     # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
-                    if i == 0:
-                        raw_request_current = raw_request[0:raw_request.index('and')]
-                    else:
-                        raw_request_current = raw_request[raw_request.index('and')+1:]
+                    if "and" in raw_request:
+                        if i == 0:
+                            raw_request_current = raw_request[0:raw_request.index('and')]
+                        else:
+                            raw_request_current = raw_request[raw_request.index('and')+1:]
                     # if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
                     if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request_current:
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
