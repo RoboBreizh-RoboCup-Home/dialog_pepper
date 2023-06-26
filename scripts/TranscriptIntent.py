@@ -35,6 +35,8 @@ class Intent():
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
             print(f'model output: {parser_intent}')
 
+            # if 'name'
+
 
             name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone']
 
@@ -80,6 +82,21 @@ class Intent():
                             # all the elders, women, man, people, children
                             task_dict_copy.update({k : ' '.join(words.split()[3:])})
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
+
+
+                    if k == 'what' and task_dict['intent'] == 'tell':
+                        doc = nlp(words)
+                        dep_lst = [token.dep_ for token in doc]
+                        print(dep_lst)
+                        if ' '.join(dep_lst[:6]) == 'ROOT prep det pobj prep det':
+                            task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
+                            if 'amod' in dep_lst:
+                                task_dict_copy.update({'dest' : ' '.join(words.split()[-2:])})
+                            else:
+                                task_dict_copy.update({'dest' : words.split()[-1]})
+
+                        task_descr_lst[i] = str(task_dict_copy)
+                        continue
 
                     else:
                         
