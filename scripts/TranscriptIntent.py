@@ -33,7 +33,7 @@ class Intent():
             raw_request = req.transcript.split()
 
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
-            print(parser_intent)
+            print(f'model output: {parser_intent}')
 
 
             name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone']
