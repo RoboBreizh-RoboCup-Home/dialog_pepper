@@ -33,7 +33,7 @@ class Intent():
             raw_request = req.transcript.split()
 
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
-            print(parser_intent)
+            print(f'model output: {parser_intent}')
 
 
             name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone']
@@ -58,6 +58,17 @@ class Intent():
                     
                     if k == 'intent':
                         continue
+
+                    if k == 'per':
+                        name_values = words.split()
+                        if len(name_values) == 2:
+                            if name_values[0] in name_lst and name_values[1] in name_lst:
+                                task_dict_copy.update({k : name_values[0]})
+                                task_dict_copy.update({'dest_per' : name_values[1]})
+
+                                # skip the rest
+                                task_descr_lst[i] = task_dict_copy_string
+                                continue
 
                     if k == 'dest':
                         if words.split()[0] in name_lst:
