@@ -110,7 +110,6 @@ class Intent():
                                         
                     # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
-                    print(f"raw request: {raw_request}")
                     if i == 0:
                         raw_request_current = raw_request[0:raw_request.index('and')]
                     else:
