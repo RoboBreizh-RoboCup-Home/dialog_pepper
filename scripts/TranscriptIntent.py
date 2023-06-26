@@ -59,6 +59,13 @@ class Intent():
                     if k == 'intent':
                         continue
 
+                    if k == 'per':
+                        name_values = words.split()
+                        if len(name_values) == 2:
+                            if name_values[0] in name_lst and name_values[1] in name_lst:
+                                task_dict_copy.update({k : name_values[0]})
+                                task_dict_copy.update({'dest_per' : name_values[1]})
+
                     if k == 'dest':
                         if words.split()[0] in name_lst:
                             task_dict_copy.update({k : ' '.join(words.split()[1:])})
