@@ -33,7 +33,7 @@ class Intent():
             raw_request = req.transcript.split()
 
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
-            print(f'model output: {parser_intent}')
+            # print(f'model output: {parser_intent}')
 
             # if 'name'
 
@@ -94,7 +94,7 @@ class Intent():
                                 task_dict_copy.update({'dest' : ' '.join(words.split()[-2:])})
                             else:
                                 task_dict_copy.update({'dest' : words.split()[-1]})
-
+                        print(task_dict_copy)
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
 
