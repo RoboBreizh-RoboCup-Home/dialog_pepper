@@ -86,8 +86,10 @@ class Intent():
 
                     if k == 'what' and task_dict['intent'] == 'tell':
                         word_lst = words.split()
-                        if word_lst[3] != 'person':
+                        if word_lst[1] == 'person':
                             words = ' '.join([word_lst[0]] + ['of the'] + word_lst[1:])
+                        elif word_lst[2] == 'person':
+                            words = ' '.join([word_lst[0]] + ['the'] + word_lst[1:])
                         doc = self.spacy_descr(words)
                         dep_lst = [token.dep_ for token in doc]
                         print(dep_lst)
