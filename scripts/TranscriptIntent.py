@@ -85,7 +85,7 @@ class Intent():
 
 
                     if k == 'what' and task_dict['intent'] == 'tell':
-                        doc = nlp(words)
+                        doc = self.spacy_descr(words)
                         dep_lst = [token.dep_ for token in doc]
                         print(dep_lst)
                         if ' '.join(dep_lst[:6]) == 'ROOT prep det pobj prep det':
