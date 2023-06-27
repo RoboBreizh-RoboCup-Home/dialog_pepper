@@ -93,7 +93,7 @@ class Intent():
                         print(dep_lst)
                         if ' '.join(dep_lst[:6]) == 'ROOT prep det pobj prep det':
                             task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
-                            if 'amod' in dep_lst:
+                            if dep_lst[-2] != 'det':
                                 task_dict_copy.update({'dest' : ' '.join(words.split()[-2:])})
                             else:
                                 task_dict_copy.update({'dest' : words.split()[-1]})
