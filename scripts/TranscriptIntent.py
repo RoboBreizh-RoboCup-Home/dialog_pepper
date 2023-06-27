@@ -89,7 +89,7 @@ class Intent():
                         if word_lst[1] == 'person':
                             words = ' '.join([word_lst[0]] + ['of the'] + word_lst[1:])
                         elif word_lst[2] == 'person':
-                            words = ' '.join([word_lst[:2]] + ['the'] + word_lst[1:])
+                            words = ' '.join(word_lst[:2] + ['the'] + word_lst[2:])
 
                         print('words:', words)
                         doc = self.spacy_descr(words)
