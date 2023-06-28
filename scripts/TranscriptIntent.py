@@ -85,6 +85,8 @@ class Intent():
 
 
                     if k == 'what' and task_dict['intent'] == 'tell':
+                        if words.split()[0] == 'the':
+                            words = ' '.join(words.split()[1:])
                         word_lst = words.split()
                         if word_lst[1] == 'person':
                             words = ' '.join([word_lst[0]] + ['of the'] + word_lst[1:])
