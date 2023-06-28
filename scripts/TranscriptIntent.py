@@ -87,9 +87,9 @@ class Intent():
                         task_dict_copy['intent'] = 'count'
                         word_lst = words.split()
                         are_idx = word_lst.index('are')
-                        POSE_START_IDX = 7
-                        task_dict_copy['dest'] = word_lst[POSE_START_IDX:are_idx]
-                        task_dict_copy['what'] = word_lst[are_idx:]
+                        the_idx = word_lst.index('the')
+                        task_dict_copy['dest'] =  ' '.join(word_lst[the_idx+1:are_idx])
+                        task_dict_copy['what'] = ' '.join(word_lst[are_idx+1:])
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
 
