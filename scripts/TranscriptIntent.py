@@ -84,15 +84,15 @@ class Intent():
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
 
                     if task_dict['intent'] == 'tell' and words.split()[:3] == 'how many people':
-                        task_dict['intent'] = 'count'
+                        task_dict_copy['intent'] = 'count'
                         word_lst = words.split()
                         are_idx = word_lst.index('are')
                         POSE_START_IDX = 7
-                        task_dict['dest'] = word_lst[POSE_START_IDX:are_idx]
-                        task_dict['what'] = word_lst[are_idx:]
+                        task_dict_copy['dest'] = word_lst[POSE_START_IDX:are_idx]
+                        task_dict_copy['what'] = word_lst[are_idx:]
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
-                    
+
                     if k == 'what' and task_dict['intent'] == 'tell':
                         if words.split()[0] == 'the':
                             words = ' '.join(words.split()[1:])
