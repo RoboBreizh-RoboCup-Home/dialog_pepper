@@ -90,6 +90,10 @@ class Intent():
                         the_idx = word_lst.index('the')
                         task_dict_copy['dest'] =  ' '.join(word_lst[the_idx+1:are_idx])
                         task_dict_copy['what'] = ' '.join(word_lst[are_idx+1:])
+                        if task_dict_copy['what'] == 'girls':
+                            task_dict_copy['what'] = 'female'
+                        elif task_dict_copy['what'] == 'boys':
+                            task_dict_copy['what'] = 'male'
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
 
