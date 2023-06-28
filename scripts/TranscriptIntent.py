@@ -83,7 +83,7 @@ class Intent():
                             task_dict_copy.update({k : ' '.join(words.split()[3:])})
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
 
-                    if task_dict['intent'] == 'tell' and words.split()[:3] == 'how many people':
+                    if task_dict['intent'] == 'tell' and ' '.join(words.split()[:3]) == 'how many people':
                         task_dict_copy['intent'] = 'count'
                         word_lst = words.split()
                         are_idx = word_lst.index('are')
