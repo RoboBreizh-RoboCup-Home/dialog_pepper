@@ -95,82 +95,37 @@
     ],
     "name": [
         {
-            "label": "James"
+            "label": "Adel"
         },
         {
-            "label": "Robert"
+            "label": "Angel"
+        },
+        {
+            "label": "Axel"
+        },
+        {
+            "label": "Charlie"
+        },
+        {
+            "label": "Jane"
         },
         {
             "label": "John"
         },
         {
-            "label": "Michael"
+            "label": "Jules"
         },
         {
-            "label": "David"
+            "label": "Morgan"
         },
         {
-            "label": "William"
+            "label": "Paris"
         },
         {
-            "label": "Richard"
+            "label": "Robin"
         },
         {
-            "label": "Joseph"
-        },
-        {
-            "label": "Thomas"
-        },
-        {
-            "label": "Charles"
-        },
-        {
-            "label": "Christopher"
-        },
-        {
-            "label": "Daniel"
-        },
-        {
-            "label": "Matthew"
-        },
-        {
-            "label": "Anthony"
-        },
-        {
-            "label": "Mark"
-        },
-        {
-            "label": "Donald"
-        },
-        {
-            "label": "Steven"
-        },
-        {
-            "label": "Paul"
-        },
-        {
-            "label": "Andrew"
-        },
-        {
-            "label": "Joshua"
-        },
-        {
-            "label": "Kenneth"
-        },
-        {
-            "label": "Kevin"
-        },
-        {
-            "label": "Brian"
-        },
-        {
-            "label": "George"
-        },
-        {
-            "label": "Timothy"
-        },
-        {
-            "label": "Ronald"
+            "label": "Simone"
         }
     ],
     "confirmation" : [
