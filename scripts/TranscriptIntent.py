@@ -87,6 +87,19 @@ class Intent():
                             # all the elders, women, man, people, children
                             task_dict_copy.update({k : ' '.join(words.split()[3:])})
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
+                    
+                    # ----------- haven't test this yet  ----------------------------------
+                    if len(task_dict_copy) == 1:
+                        continue
+                    if task_dict['intent'] == 'guide' and 'leave' in raw_request: # only ask sb to leave has "leave"
+                        task_dict['intent'] == 'tell'
+                        task_dict_copy['dest'] =  task_dict_copy['per']
+                        task_dict_copy.pop('per')
+                        task_dict_copy['what'] = "ask leave"
+
+                        task_descr_lst[i] = str(task_dict_copy)
+                        continue
+                    # ----------- haven't test this yet  ----------------------------------
 
                     if task_dict['intent'] == 'tell' and ' '.join(words.split()[:3]) == 'how many people':
                         task_dict_copy['intent'] = 'count'
