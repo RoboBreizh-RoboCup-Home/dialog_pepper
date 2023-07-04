@@ -33,7 +33,14 @@ class Intent():
             raw_request = req.transcript.split()
 
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
-            print(parser_intent)
+            # print(f'model output: {parser_intent}')
+
+            # if 'name'
+
+
+            name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone']
+
+            last_person = None
 
 
             name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone']
@@ -59,6 +66,17 @@ class Intent():
                     if k == 'intent':
                         continue
 
+                    if k == 'per':
+                        name_values = words.split()
+                        if len(name_values) == 2:
+                            if name_values[0] in name_lst and name_values[1] in name_lst:
+                                task_dict_copy.update({k : name_values[0]})
+                                task_dict_copy.update({'dest_per' : name_values[1]})
+
+                                # skip the rest
+                                task_descr_lst[i] = task_dict_copy_string
+                                continue
+
                     if k == 'dest':
                         if words.split()[0] in name_lst:
                             task_dict_copy.update({k : ' '.join(words.split()[1:])})
@@ -69,6 +87,43 @@ class Intent():
                             # all the elders, women, man, people, children
                             task_dict_copy.update({k : ' '.join(words.split()[3:])})
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
+
+                    if task_dict['intent'] == 'tell' and ' '.join(words.split()[:3]) == 'how many people':
+                        task_dict_copy['intent'] = 'count'
+                        word_lst = words.split()
+                        are_idx = word_lst.index('are')
+                        the_idx = word_lst.index('the')
+                        task_dict_copy['dest'] =  ' '.join(word_lst[the_idx+1:are_idx])
+                        task_dict_copy['what'] = ' '.join(word_lst[are_idx+1:])
+                        if task_dict_copy['what'] == 'girls':
+                            task_dict_copy['what'] = 'female'
+                        elif task_dict_copy['what'] == 'boys':
+                            task_dict_copy['what'] = 'male'
+                        task_descr_lst[i] = str(task_dict_copy)
+                        continue
+
+                    if k == 'what' and task_dict['intent'] == 'tell':
+                        if words.split()[0] == 'the':
+                            words = ' '.join(words.split()[1:])
+                        word_lst = words.split()
+                        if word_lst[1] == 'person':
+                            words = ' '.join([word_lst[0]] + ['of the'] + word_lst[1:])
+                        elif word_lst[2] == 'person':
+                            words = ' '.join(word_lst[:2] + ['the'] + word_lst[2:])
+
+                        print('words:', words)
+                        doc = self.spacy_descr(words)
+                        dep_lst = [token.dep_ for token in doc]
+                        print(dep_lst)
+                        if ' '.join(dep_lst[:6]) == 'ROOT prep det pobj prep det':
+                            task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
+                            if dep_lst[-2] != 'det':
+                                task_dict_copy.update({'dest' : ' '.join(words.split()[-2:])})
+                            else:
+                                task_dict_copy.update({'dest' : words.split()[-1]})
+                        print(task_dict_copy)
+                        task_descr_lst[i] = str(task_dict_copy)
+                        continue
 
                     else:
                         
@@ -110,14 +165,18 @@ class Intent():
                                         
                     # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
+                    if "and" in raw_request:
+                        if i == 0:
+                            raw_request_current = raw_request[0:raw_request.index('and')]
+                        else:
+                            raw_request_current = raw_request[raw_request.index('and')+1:]
                     # if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
-                    if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request:
+                    if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request_current:
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
                         
                     task_descr_lst[i] = task_dict_copy_string
                     
                     
-
             parser_intent = '\n'.join(task_descr_lst)
         
               

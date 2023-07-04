@@ -9016,7 +9016,7 @@ Could you please pick up the tray from the sink and place it on the counter
 #
 ###############################################################################
 
-Tell me how many people in the bedroom are male
+ me how many people in the bedroom are male
 
 
 ###############################################################################
@@ -17738,7 +17738,7 @@ Could you please put the potato chips on the desk
 #
 ###############################################################################
 
-Robot please tell me how many people in the bedroom are lying down
+Robot please  me how many people in the bedroom are lying down
 
 
 ###############################################################################
@@ -24358,7 +24358,7 @@ Remarks
 #
 ###############################################################################
 
-Please contact Alex at the exit and introduce it to Michael at the sink
+	Please contact Alex at the exit and introduce it to Michael at the sink
 
 
 ###############################################################################
