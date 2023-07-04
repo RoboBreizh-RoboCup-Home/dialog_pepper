@@ -1,3 +1,7 @@
+import os
+
+os.environ['CURL_CA_BUNDLE'] = ''
+
 import time
 import onnxruntime
 import numpy as np
