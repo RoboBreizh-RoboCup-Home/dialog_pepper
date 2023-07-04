@@ -43,6 +43,11 @@ class Intent():
             last_person = None
 
 
+            name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone']
+
+            last_person = None
+
+
             parser_intent = re.sub("''","'",parser_intent)
             begin_lst = [m.start() for m in re.finditer('{',parser_intent)]
             end_lst = [m.start() for m in re.finditer('}',parser_intent)]
@@ -172,7 +177,6 @@ class Intent():
                     task_descr_lst[i] = task_dict_copy_string
                     
                     
-
             parser_intent = '\n'.join(task_descr_lst)
         
               
