@@ -100,6 +100,8 @@ class Intent():
                         task_dict_copy['what'] = "ask leave"
 
                         task_descr_lst[i] = str(task_dict_copy)
+                        if task_descr_lst[-1] == "{'intent': 'take'}":
+                            task_descr_lst.pop()
                         print(f'task_descr_lst: {task_descr_lst}')
                         continue
 
