@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 	<arg name="pepper" default="true" doc="is the node running on the robot or not"/>
+	<arg name="gpsr" default="true" doc="value required to be set by manager."/>
 
     <group if="$(arg pepper)">
         <node pkg="dialog_pepper" type="SpeechToText.py" name="speech_to_text" output="screen"/>
