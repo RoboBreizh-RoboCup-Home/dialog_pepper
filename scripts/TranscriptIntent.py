@@ -89,7 +89,7 @@ class Intent():
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
                     
                     # ----------- haven't test this yet  ----------------------------------
-                    if len(task_dict_copy) == 1:
+                    if len(task_dict_copy) == 1: # if there is only one element (eg; no slots detected -> skip)
                         continue
                     if task_dict['intent'] == 'guide' and 'leave' in raw_request: # only ask sb to leave has "leave"
                         task_dict['intent'] == 'tell'
@@ -99,6 +99,10 @@ class Intent():
 
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
+
+
+                    if task_dict['intent'] == 'guide' and raw_request[-1] == 'back':
+                        task_dict_copy['dest'] = "back"
                     # ----------- haven't test this yet  ----------------------------------
 
                     if task_dict['intent'] == 'tell' and ' '.join(words.split()[:3]) == 'how many people':
