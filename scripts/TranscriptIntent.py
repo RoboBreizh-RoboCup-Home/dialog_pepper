@@ -7,7 +7,7 @@ from robobreizh_msgs.srv import *
 # from dialog_pepper.srv import *
 from predict_robot import CommandProcessor
 import spacy
-import json 
+import json
 import re
 import ast
 
@@ -29,7 +29,7 @@ class Intent():
         # sti ros service callback
         try:
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing intent..."+W)
-            
+
             raw_request = req.transcript.split()
 
             parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
@@ -58,11 +58,11 @@ class Intent():
                 task_dict = ast.literal_eval(task)
                 task_dict_copy = task_dict.copy()
 
-                
+
                 for k in task_dict.keys():
 
                     words = task_dict[k]
-                    
+
                     if k == 'intent':
                         continue
 
@@ -87,7 +87,7 @@ class Intent():
                             # all the elders, women, man, people, children
                             task_dict_copy.update({k : ' '.join(words.split()[3:])})
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
-                    
+
                     # ----------- haven't test this yet  ----------------------------------
                     # print('dic len : ',len(task_dict_copy))
                     # print('dic: ',task_dict_copy)
@@ -101,7 +101,7 @@ class Intent():
 
                         task_descr_lst[i] = str(task_dict_copy)
 
-                        if task_descr_lst[-1] == "{'intent': 'take'}": # fix a weird 
+                        if task_descr_lst[-1] == "{'intent': 'take'}": # fix a weird
                             task_descr_lst.pop()
                         continue
 
@@ -147,11 +147,48 @@ class Intent():
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
 
+                    if task_dict['intent'] == 'tell' and ' '.join(words.split()[:3]) == 'how many people':
+                        task_dict_copy['intent'] = 'count'
+                        word_lst = words.split()
+                        are_idx = word_lst.index('are')
+                        the_idx = word_lst.index('the')
+                        task_dict_copy['dest'] =  ' '.join(word_lst[the_idx+1:are_idx])
+                        task_dict_copy['what'] = ' '.join(word_lst[are_idx+1:])
+                        if task_dict_copy['what'] == 'girls':
+                            task_dict_copy['what'] = 'female'
+                        elif task_dict_copy['what'] == 'boys':
+                            task_dict_copy['what'] = 'male'
+                        task_descr_lst[i] = str(task_dict_copy)
+                        continue
+
+                    if k == 'what' and task_dict['intent'] == 'tell':
+                        if words.split()[0] == 'the':
+                            words = ' '.join(words.split()[1:])
+                        word_lst = words.split()
+                        if word_lst[1] == 'person':
+                            words = ' '.join([word_lst[0]] + ['of the'] + word_lst[1:])
+                        elif word_lst[2] == 'person':
+                            words = ' '.join(word_lst[:2] + ['the'] + word_lst[2:])
+
+                        print('words:', words)
+                        doc = self.spacy_descr(words)
+                        dep_lst = [token.dep_ for token in doc]
+                        print(dep_lst)
+                        if ' '.join(dep_lst[:6]) == 'ROOT prep det pobj prep det':
+                            task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
+                            if dep_lst[-2] != 'det':
+                                task_dict_copy.update({'dest' : ' '.join(words.split()[-2:])})
+                            else:
+                                task_dict_copy.update({'dest' : words.split()[-1]})
+                        print(task_dict_copy)
+                        task_descr_lst[i] = str(task_dict_copy)
+                        continue
+
                     else:
-                        
+
                         if k == 'per':
                             last_person = words.split()[-1]
-                    
+
                         if 'room' in words and len(words.split())==2: # don't need to parse the room
                             continue
 
@@ -184,9 +221,6 @@ class Intent():
                                     task_dict_copy.update({k+'_descr_adj' : words.split()[dep_lst.index('amod')]})
                                 if 'dobj' in dep_lst:
                                     task_dict_copy.update({k+'_descr_key' : words.split()[dep_lst.index('dobj')]})
-                                        
-                    
-                    
 
                     # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
@@ -198,7 +232,7 @@ class Intent():
                     # if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
                     if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request_current:
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
-                    
+
                     # print('----------------')
                     # print(task_dict_copy_string)
                     # print(len(task_dict_copy_string))
@@ -208,11 +242,9 @@ class Intent():
                     #     continue # if there is only one element (eg; no slots detected -> skip)
                     # else:
                     task_descr_lst[i] = task_dict_copy_string
-                    
-                    
             parser_intent = '\n'.join(task_descr_lst)
-        
-              
+
+
 
             # print(parser_intent)
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing Done..."+W)
