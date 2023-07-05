@@ -100,6 +100,7 @@ class Intent():
                         task_dict_copy['what'] = "ask leave"
 
                         task_descr_lst[i] = str(task_dict_copy)
+                        print(f'task_descr_lst: {task_descr_lst}')
                         continue
 
 
@@ -196,15 +197,15 @@ class Intent():
                     if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request_current:
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
                     
-                    print('----------------')
-                    print(task_dict_copy_string)
-                    print(len(task_dict_copy_string))
-                    print(task_dict_copy)
-                    print('----------------')
-                    if len(task_dict_copy) == 1:
-                        continue # if there is only one element (eg; no slots detected -> skip)
-                    else:
-                        task_descr_lst[i] = task_dict_copy_string
+                    # print('----------------')
+                    # print(task_dict_copy_string)
+                    # print(len(task_dict_copy_string))
+                    # print(task_dict_copy)
+                    # print('----------------')
+                    # if len(task_dict_copy) == 1:
+                    #     continue # if there is only one element (eg; no slots detected -> skip)
+                    # else:
+                    task_descr_lst[i] = task_dict_copy_string
                     
                     
             parser_intent = '\n'.join(task_descr_lst)
