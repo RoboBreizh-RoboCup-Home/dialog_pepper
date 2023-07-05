@@ -183,8 +183,7 @@ class Intent():
                                     task_dict_copy.update({k+'_descr_key' : words.split()[dep_lst.index('dobj')]})
                                         
                     
-                    if len(task_dict_copy) == 1:
-                        continue # if there is only one element (eg; no slots detected -> skip)
+                    
 
                     # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
@@ -196,8 +195,12 @@ class Intent():
                     # if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'dest_per' in task_dict_copy_string:
                     if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request_current:
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
-                        
-                    task_descr_lst[i] = task_dict_copy_string
+                    
+
+                    if len(task_dict_copy) == 1:
+                        continue # if there is only one element (eg; no slots detected -> skip)
+                    else:
+                        task_descr_lst[i] = task_dict_copy_string
                     
                     
             parser_intent = '\n'.join(task_descr_lst)
