@@ -89,8 +89,8 @@ class Intent():
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
                     
                     # ----------- haven't test this yet  ----------------------------------
-                    print(len(task_dict_copy))
-                    print(task_dict_copy)
+                    print('dic len : ',len(task_dict_copy))
+                    print('dic: ',task_dict_copy)
                     if len(task_dict_copy) == 1: # if there is only one element (eg; no slots detected -> skip)
                         continue
                     if task_dict['intent'] == 'guide' and 'leave' in raw_request: # only ask sb to leave has "leave"
@@ -130,17 +130,17 @@ class Intent():
                         elif word_lst[2] == 'person':
                             words = ' '.join(word_lst[:2] + ['the'] + word_lst[2:])
 
-                        print('words:', words)
+                        # print('words:', words)
                         doc = self.spacy_descr(words)
                         dep_lst = [token.dep_ for token in doc]
-                        print(dep_lst)
+                        # print(dep_lst)
                         if ' '.join(dep_lst[:6]) == 'ROOT prep det pobj prep det':
                             task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
                             if dep_lst[-2] != 'det':
                                 task_dict_copy.update({'dest' : ' '.join(words.split()[-2:])})
                             else:
                                 task_dict_copy.update({'dest' : words.split()[-1]})
-                        print(task_dict_copy)
+                        # print(task_dict_copy)
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
 
@@ -200,7 +200,7 @@ class Intent():
         
               
 
-            print(parser_intent)
+            # print(parser_intent)
             rospy.loginfo(B+"[Robobreizh - Dialog] Parsing Done..."+W)
             rospy.loginfo(
                 B+"[Robobreizh - Dialog] Recognized text: " + W + parser_intent)
