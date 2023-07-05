@@ -89,10 +89,10 @@ class Intent():
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
                     
                     # ----------- haven't test this yet  ----------------------------------
-                    print('dic len : ',len(task_dict_copy))
-                    print('dic: ',task_dict_copy)
-                    if len(task_dict_copy) == 1: # if there is only one element (eg; no slots detected -> skip)
-                        continue
+                    # print('dic len : ',len(task_dict_copy))
+                    # print('dic: ',task_dict_copy)
+                    # if len(task_dict_copy) == 1: # if there is only one element (eg; no slots detected -> skip)
+                    #     continue
                     if task_dict['intent'] == 'guide' and 'leave' in raw_request: # only ask sb to leave has "leave"
                         task_dict_copy['intent'] = 'tell'
                         task_dict_copy['dest'] =  task_dict_copy['per']
@@ -100,9 +100,9 @@ class Intent():
                         task_dict_copy['what'] = "ask leave"
 
                         task_descr_lst[i] = str(task_dict_copy)
-                        if task_descr_lst[-1] == "{'intent': 'take'}":
+
+                        if task_descr_lst[-1] == "{'intent': 'take'}": # fix a weird 
                             task_descr_lst.pop()
-                        print(f'task_descr_lst: {task_descr_lst}')
                         continue
 
 
