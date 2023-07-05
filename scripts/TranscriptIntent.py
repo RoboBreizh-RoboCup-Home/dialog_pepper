@@ -196,7 +196,11 @@ class Intent():
                     if 'greet' in task_dict_copy_string and 'per' in task_dict_copy_string and 'introduce' in raw_request_current:
                         task_dict_copy_string = task_dict_copy_string.replace("greet", "introduce")
                     
-
+                    print('----------------')
+                    print(task_dict_copy_string)
+                    print(len(task_dict_copy_string))
+                    print(task_dict_copy)
+                    print('----------------')
                     if len(task_dict_copy) == 1:
                         continue # if there is only one element (eg; no slots detected -> skip)
                     else:
