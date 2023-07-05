@@ -89,6 +89,7 @@ class Intent():
                             task_dict_copy.update({k + '_per' : ' '.join(words.split()[:3])})
                     
                     # ----------- haven't test this yet  ----------------------------------
+                    print(len(task_dict_copy))
                     if len(task_dict_copy) == 1: # if there is only one element (eg; no slots detected -> skip)
                         continue
                     if task_dict['intent'] == 'guide' and 'leave' in raw_request: # only ask sb to leave has "leave"
