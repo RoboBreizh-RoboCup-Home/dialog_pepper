@@ -94,7 +94,7 @@ class Intent():
                     if len(task_dict_copy) == 1: # if there is only one element (eg; no slots detected -> skip)
                         continue
                     if task_dict['intent'] == 'guide' and 'leave' in raw_request: # only ask sb to leave has "leave"
-                        task_dict_copy['intent'] == 'tell'
+                        task_dict_copy['intent'] = 'tell'
                         task_dict_copy['dest'] =  task_dict_copy['per']
                         task_dict_copy.pop('per')
                         task_dict_copy['what'] = "ask leave"
@@ -182,6 +182,10 @@ class Intent():
                                 if 'dobj' in dep_lst:
                                     task_dict_copy.update({k+'_descr_key' : words.split()[dep_lst.index('dobj')]})
                                         
+                    
+                    if len(task_dict_copy) == 1:
+                        continue # if there is only one element (eg; no slots detected -> skip)
+
                     # for greet and introduce
                     task_dict_copy_string = str(task_dict_copy)
                     if "and" in raw_request:
