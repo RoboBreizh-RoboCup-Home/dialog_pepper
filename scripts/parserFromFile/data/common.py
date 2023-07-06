@@ -3,8 +3,8 @@ Start = ["start", "task"]
 Name = ["Adel", "Angel", "Axel", "Charlie", "Jane", "John", "Jules", "Morgan",
         "Paris", "Robin", "Simone"]
 
-Drink = ["Water", "Milk", "Coke", "Tonic", "Bubble Tea", "Ice Tea", "Wine", "Coffee", "Lemonade", "Iced tea", "Hot chocolate", "Juice", "Milkshake", "Tea", "Beer", "Soda",
-         "Coffee", "Tea bag", "Tea", "Green tea", "Chocolate milk", "Hot chocolate", "Tomato juice", "Smoothie", "Coconut milk", "Orange juice", "Lemonade", "Fruit juice", "Cocoa"]
+Drink = [ "Cola","Iced tea","Ice Tea","Juice pack","Milk","Orange juice","red wine","tropical juice", "Water", "Coke","Tonic", "Bubble Tea",  "Wine", "Coffee", "Lemonade",  "Hot chocolate",  "Milkshake", "Tea", "Beer", "Soda",
+         "Coffee", "Tea bag", "Tea", "Green tea", "Chocolate milk", "Hot chocolate", "Tomato juice", "Smoothie", "Coconut milk",  "Lemonade", "Fruit juice", "Cocoa"]
 
 Locations = ["Entrance", "Exit", "Bed", "Night table", "Desk", "Dinning table", "Couch", "End table", "Bookcase", "Cupboard", "Storage table", "Sink", "Counter", "Dishwasher"]
 
