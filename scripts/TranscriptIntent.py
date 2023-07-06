@@ -251,7 +251,7 @@ class Intent():
             to_say = ''
             if len(say_dict_lst) == 1:
                 dic = say_dict_lst[0]
-                to_say = f'I am going to do the task of {dic['intent']}'
+                to_say = f"I am going to do the task of {dic['intent']}"
                 dic.pop('intent')
                 for k,v in dic.items():
                     to_say += f'the {k} is {v}'
@@ -259,7 +259,7 @@ class Intent():
             else:
                 for i,dic in enumerate(say_dict_lst):
                     if i == 0:
-                        to_say = f'I am going to do the task of {dic['intent']} in the first task'
+                        to_say = f"I am going to do the task of {dic['intent']} in the first task"
                         dic.pop('intent')
                         for k,v in dic.items():
                             to_say += f'the {k} is {v}'
