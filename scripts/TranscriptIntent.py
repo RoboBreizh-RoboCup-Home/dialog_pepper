@@ -54,6 +54,8 @@ class Intent():
 
             task_lst = [parser_intent[b:e+1] for b,e in zip(begin_lst,end_lst)]
             task_descr_lst = task_lst.copy()
+
+
             for i,task in enumerate(task_lst):
                 task_dict = ast.literal_eval(task)
                 task_dict_copy = task_dict.copy()
@@ -243,6 +245,28 @@ class Intent():
                     # else:
                     task_descr_lst[i] = task_dict_copy_string
             parser_intent = '\n'.join(task_descr_lst)
+            
+            say_dict_lst = [ast.literal_eval(task) for task in parser_intent.split('\n')]
+
+            to_say = ''
+            if len(say_dict_lst) == 1:
+                dic = say_dict_lst[0]
+                to_say = f'I am going to do the task of {dic['intent']}'
+                dic.pop('intent')
+                for k,v in dic.items():
+                    to_say += f'the {k} is {v}'
+
+            else:
+                for i,dic in enumerate(say_dict_lst):
+                    if i == 0:
+                        to_say = f'I am going to do the task of {dic['intent']} in the first task'
+                        dic.pop('intent')
+                        for k,v in dic.items():
+                            to_say += f'the {k} is {v}'
+
+            print(f'to say: {to_say}')
+
+
 
 
 
