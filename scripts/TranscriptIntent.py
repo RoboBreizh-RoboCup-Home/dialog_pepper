@@ -282,7 +282,38 @@ class Intent():
                                 key = 'what to say'
                             elif k == 'obj':
                                 key = 'object'
-                            to_say += f' the {key} is {v}'
+                            to_say += f' and the {key} is {v}'
+                    if i == 1:
+                        to_say = f"I am going to do the task of {dic['intent']} in the second task"
+                        dic.pop('intent')
+                        for k,v in dic.items():
+                            if k == 'dest':
+                                key = 'destination'
+                            elif k == 'per':
+                                key = 'person'
+                            elif k == 'sour':
+                                key = 'source'
+                            elif k == 'what':
+                                key = 'what to say'
+                            elif k == 'obj':
+                                key = 'object'
+                            to_say += f' and the {key} is {v}'
+
+                    if i == 2:
+                        to_say = f"I am going to do the task of {dic['intent']} in the third task"
+                        dic.pop('intent')
+                        for k,v in dic.items():
+                            if k == 'dest':
+                                key = 'destination'
+                            elif k == 'per':
+                                key = 'person'
+                            elif k == 'sour':
+                                key = 'source'
+                            elif k == 'what':
+                                key = 'what to say'
+                            elif k == 'obj':
+                                key = 'object'
+                            to_say += f' and the {key} is {v}'
 
             
             
