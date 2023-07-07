@@ -254,7 +254,17 @@ class Intent():
                 to_say = f"I am going to do the task of {dic['intent']}"
                 dic.pop('intent')
                 for k,v in dic.items():
-                    to_say += f' the {k} is {v}'
+                    if k == 'dest':
+                        key = 'destination'
+                    elif k == 'per':
+                        key = 'person'
+                    elif k == 'sour':
+                        key = 'source'
+                    elif k == 'what':
+                        key = 'what to say'
+                    elif k == 'obj':
+                        key = 'object'
+                    to_say += f' and the {key} is {v}'
 
             else:
                 for i,dic in enumerate(say_dict_lst):
