@@ -11,8 +11,10 @@ import json
 import re
 import ast
 
+import qi
+
 class Intent():
-    def __init__(self):
+    def __init__(self, session):
         model_name='distil_bert'
         model_path = os.path.join(get_pkg_path(), 'scripts/quantized_models/distil_bert.onnx')
         slot_classifier_path = os.path.join(get_pkg_path(), 'scripts/numpy_para/slot_classifier')
@@ -24,6 +26,8 @@ class Intent():
                                        pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=model_name)
         self.module_name = "TranscriptIntent"
         self.spacy_descr = spacy.load('en_core_web_sm')
+
+        self.aLAnimatedSpeech = session.service("ALAnimatedSpeech")
 
     def intent_callback(self, req):
         # sti ros service callback
@@ -314,13 +318,11 @@ class Intent():
                             elif k == 'obj':
                                 key = 'object'
                             to_say += f' and the {key} is {v}'
-
-            
-            
-            
            
 
             print(f'to say: {to_say}')
+
+            self.aLAnimatedSpeech.say(to_say)
 
 
             # print(parser_intent)
@@ -363,6 +365,13 @@ class Intent():
 
 
 if __name__ == "__main__":
+    session = qi.Session()
+    try:
+        session.connect("tcp://localhost:9559")
+    except RuntimeError:
+        print("Can't connect to Naoqi")
+        sys.exit(1)
+
     # pass
-    transcipt_intent = Intent()
+    transcipt_intent = Intent(session)
     transcipt_intent.start_wti_srv()
