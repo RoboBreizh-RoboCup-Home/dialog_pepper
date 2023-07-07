@@ -284,7 +284,7 @@ class Intent():
                                 key = 'object'
                             to_say += f' and the {key} is {v}'
                     if i == 1:
-                        to_say = f"I am going to do the task of {dic['intent']} in the second task"
+                        to_say += f"I am going to do the task of {dic['intent']} in the second task"
                         dic.pop('intent')
                         for k,v in dic.items():
                             if k == 'dest':
@@ -300,7 +300,7 @@ class Intent():
                             to_say += f' and the {key} is {v}'
 
                     if i == 2:
-                        to_say = f"I am going to do the task of {dic['intent']} in the third task"
+                        to_say += f"I am going to do the task of {dic['intent']} in the third task"
                         dic.pop('intent')
                         for k,v in dic.items():
                             if k == 'dest':
