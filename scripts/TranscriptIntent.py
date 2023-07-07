@@ -273,7 +273,8 @@ class Intent():
             else:
                 for i,dic in enumerate(say_dict_lst):
                     if i == 0:
-                        to_say = f"I am going to do the task of {dic['intent']} in the first task"
+                        to_say = f"First, I will peform the task {dic['intent']} with the arguments "
+                        # to_say = f"I am going to do the task of {dic['intent']} in the first task"
                         dic.pop('intent')
                         for k,v in dic.items():
                             if k == 'dest':
@@ -286,9 +287,9 @@ class Intent():
                                 key = 'what to say'
                             elif k == 'obj':
                                 key = 'object'
-                            to_say += f' and the {key} is {v}'
+                            to_say += f' {key} : {v} ; '
                     if i == 1:
-                        to_say += f" I am going to do the task of {dic['intent']} in the second task"
+                        to_say += f". Second, I will peform the task {dic['intent']} with the arguments "
                         dic.pop('intent')
                         for k,v in dic.items():
                             if k == 'dest':
@@ -301,10 +302,10 @@ class Intent():
                                 key = 'what to say'
                             elif k == 'obj':
                                 key = 'object'
-                            to_say += f' and the {key} is {v}'
+                            to_say += f' {key} : {v} ; '
 
                     if i == 2:
-                        to_say += f" I am going to do the task of {dic['intent']} in the third task"
+                        to_say += f". Third, I will peform the task {dic['intent']} with the arguments "
                         dic.pop('intent')
                         for k,v in dic.items():
                             if k == 'dest':
@@ -317,7 +318,7 @@ class Intent():
                                 key = 'what to say'
                             elif k == 'obj':
                                 key = 'object'
-                            to_say += f' and the {key} is {v}'
+                            to_say += f' {key} : {v} ; '
            
 
             print(f'to say: {to_say}')
