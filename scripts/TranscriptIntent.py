@@ -40,6 +40,84 @@ class Intent():
             # print(f'model output: {parser_intent}')
 
 
+            #----------------------------------------------------
+            say_dict_lst = [ast.literal_eval(task) for task in parser_intent.split('\n')]
+
+            to_say = ''
+            if len(say_dict_lst) == 1:
+                dic = say_dict_lst[0]
+                to_say = f"I am going to do the task of {dic['intent']}"
+                dic.pop('intent')
+                for k,v in dic.items():
+                    if k == 'dest':
+                        key = 'destination'
+                    elif k == 'per':
+                        key = 'person'
+                    elif k == 'sour':
+                        key = 'source'
+                    elif k == 'what':
+                        key = 'what to say'
+                    elif k == 'obj':
+                        key = 'object'
+                    to_say += f' and the {key} is {v}'
+
+            else:
+                for i,dic in enumerate(say_dict_lst):
+                    if i == 0:
+                        to_say = f"First, I will peform the task {dic['intent']} with the arguments "
+                        # to_say = f"I am going to do the task of {dic['intent']} in the first task"
+                        dic.pop('intent')
+                        for k,v in dic.items():
+                            if k == 'dest':
+                                key = 'destination'
+                            elif k == 'per':
+                                key = 'person'
+                            elif k == 'sour':
+                                key = 'source'
+                            elif k == 'what':
+                                key = 'what to say'
+                            elif k == 'obj':
+                                key = 'object'
+                            to_say += f' {key} : {v} ; '
+                    if i == 1:
+                        to_say += f". Second, I will peform the task {dic['intent']} with the arguments "
+                        dic.pop('intent')
+                        for k,v in dic.items():
+                            if k == 'dest':
+                                key = 'destination'
+                            elif k == 'per':
+                                key = 'person'
+                            elif k == 'sour':
+                                key = 'source'
+                            elif k == 'what':
+                                key = 'what to say'
+                            elif k == 'obj':
+                                key = 'object'
+                            to_say += f' {key} : {v} ; '
+
+                    if i == 2:
+                        to_say += f". Third, I will peform the task {dic['intent']} with the arguments "
+                        dic.pop('intent')
+                        for k,v in dic.items():
+                            if k == 'dest':
+                                key = 'destination'
+                            elif k == 'per':
+                                key = 'person'
+                            elif k == 'sour':
+                                key = 'source'
+                            elif k == 'what':
+                                key = 'what to say'
+                            elif k == 'obj':
+                                key = 'object'
+                            to_say += f' {key} : {v} ; '
+           
+
+            print(f'to say: {to_say}')
+
+            self.aLAnimatedSpeech.say(to_say)
+            #-----------------------------------------------------
+
+
             new_names_2023 = ['Adel', 'Angel', 'Axel', 'Charlie', 'Jane', 'Jules', 'Morgan', 'Paris', 'Robin', 'Simone']
 
             name_lst = ['Alex', 'Charlie', 'Elizabeth', 'Francis', 'Jennifer', 'Linda', 'Mary', 'Patricia', 'Robin', 'Skyler', 'Alex', 'Charlie', 'Francis', 'James', 'John', 'Michael', 'Robert', 'Skyler', 'William', 'everyone'] + new_names_2023
@@ -250,80 +328,7 @@ class Intent():
                     task_descr_lst[i] = task_dict_copy_string
             parser_intent = '\n'.join(task_descr_lst)
             
-            say_dict_lst = [ast.literal_eval(task) for task in parser_intent.split('\n')]
-
-            to_say = ''
-            if len(say_dict_lst) == 1:
-                dic = say_dict_lst[0]
-                to_say = f"I am going to do the task of {dic['intent']}"
-                dic.pop('intent')
-                for k,v in dic.items():
-                    if k == 'dest':
-                        key = 'destination'
-                    elif k == 'per':
-                        key = 'person'
-                    elif k == 'sour':
-                        key = 'source'
-                    elif k == 'what':
-                        key = 'what to say'
-                    elif k == 'obj':
-                        key = 'object'
-                    to_say += f' and the {key} is {v}'
-
-            else:
-                for i,dic in enumerate(say_dict_lst):
-                    if i == 0:
-                        to_say = f"First, I will peform the task {dic['intent']} with the arguments "
-                        # to_say = f"I am going to do the task of {dic['intent']} in the first task"
-                        dic.pop('intent')
-                        for k,v in dic.items():
-                            if k == 'dest':
-                                key = 'destination'
-                            elif k == 'per':
-                                key = 'person'
-                            elif k == 'sour':
-                                key = 'source'
-                            elif k == 'what':
-                                key = 'what to say'
-                            elif k == 'obj':
-                                key = 'object'
-                            to_say += f' {key} : {v} ; '
-                    if i == 1:
-                        to_say += f". Second, I will peform the task {dic['intent']} with the arguments "
-                        dic.pop('intent')
-                        for k,v in dic.items():
-                            if k == 'dest':
-                                key = 'destination'
-                            elif k == 'per':
-                                key = 'person'
-                            elif k == 'sour':
-                                key = 'source'
-                            elif k == 'what':
-                                key = 'what to say'
-                            elif k == 'obj':
-                                key = 'object'
-                            to_say += f' {key} : {v} ; '
-
-                    if i == 2:
-                        to_say += f". Third, I will peform the task {dic['intent']} with the arguments "
-                        dic.pop('intent')
-                        for k,v in dic.items():
-                            if k == 'dest':
-                                key = 'destination'
-                            elif k == 'per':
-                                key = 'person'
-                            elif k == 'sour':
-                                key = 'source'
-                            elif k == 'what':
-                                key = 'what to say'
-                            elif k == 'obj':
-                                key = 'object'
-                            to_say += f' {key} : {v} ; '
-           
-
-            print(f'to say: {to_say}')
-
-            self.aLAnimatedSpeech.say(to_say)
+            
 
 
             # print(parser_intent)
