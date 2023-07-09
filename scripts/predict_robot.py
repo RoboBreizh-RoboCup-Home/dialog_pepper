@@ -355,7 +355,8 @@ class CommandProcessor(object):
         res = self.get_res(line)
         res = [str(d)+'\n' for d in res]
         res = ''.join(res)
-
+        
+        print(res)
         return res.strip()
 
 
