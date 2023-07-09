@@ -34,8 +34,8 @@ class SpeechToWavActionServer():
         #===================== Set ALAudioDevice =====================#
         self.ALAudioDevice = session.service("ALAudioDevice")
         self.ALAudioDevice.enableEnergyComputation()
-        self.SampleRate = 48000
-        self.Channels = 4
+        self.SampleRate = 1600
+        self.Channels = 1
 
         self.init_microphone_variables()
 
