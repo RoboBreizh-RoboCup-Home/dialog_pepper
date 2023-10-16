@@ -45,6 +45,8 @@ class Intent(Node):
 
         self.sub = self.create_subscription(String, 'speech_to_text', self.callback, 10)
 
+        print("*** Intent parsing node started ***")
+
     def callback(self, req):
         # sti ros service callback
         try:
