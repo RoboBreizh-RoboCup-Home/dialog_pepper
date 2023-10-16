@@ -32,7 +32,7 @@ class Intent(Node):
         # sti ros service callback
         try:
             print(B+"[Robobreizh - Dialog] Parsing intent..."+W)
-
+            req = req.data
             raw_request = req.split()
 
             parser_intent = self.parser.predict(req.replace(", "," , ").split())
