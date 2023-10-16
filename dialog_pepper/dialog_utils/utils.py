@@ -67,6 +67,10 @@ def isBooleanInDBTrue():
 
     rows = cur.fetchall()
 
+    if rows == []:
+        conn.close()
+        return False
+
     if rows[0][0] == 1:
         conn.close()
         return  True
