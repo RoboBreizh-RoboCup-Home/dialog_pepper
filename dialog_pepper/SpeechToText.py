@@ -9,7 +9,7 @@ import qi
 import sys
 from vosk import Model, KaldiRecognizer
 
-from dialog_utils.utils import *
+from .dialog_utils.utils import *
 import os
 import threading
 

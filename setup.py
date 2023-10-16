@@ -7,7 +7,7 @@ package_name = 'dialog_pepper'
 setup(
     name=package_name,
     version='0.0.0',
-    packages=find_packages(where='scripts', exclude=['test']),
+    packages=find_packages(exclude=['test']),
     data_files=[
         ('share/' + package_name, ['package.xml']),
     ],
@@ -20,9 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'roboNLU_demo = scripts.roboNLU_demo:main',
-            'SpeechToText = scripts.SpeechToText:main',
-            'TranscriptIntent = scripts.TranscriptIntent:main',
+            'roboNLU_demo = dialog_pepper.roboNLU_demo:main',
+            'SpeechToText = dialog_pepper.SpeechToText:main',
         ],
     },
 )

@@ -1,5 +1,5 @@
 
-from dialog_utils.utils import *
+from .dialog_utils.utils import *
 import time
 from predict_robot import CommandProcessor
 import os, sys
