@@ -9,6 +9,7 @@ import re
 from std_msgs.msg import String
 import rclpy
 from rclpy.node import Node
+import qi
 
 class Intent(Node):
     def __init__(self):
@@ -25,6 +26,22 @@ class Intent(Node):
                                        pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=model_name)
         self.module_name = "TranscriptIntent"
         self.spacy_descr = spacy.load('en_core_web_sm')
+
+        session = qi.Session()
+        try:
+            session.connect("tcp://localhost:9559")
+        except RuntimeError:
+            print("Can't connect to Naoqi")
+            sys.exit(1)
+
+        self.aLAnimatedSpeech = session.service("ALAnimatedSpeech")
+
+        #===================== Set ALTextToSpeech ====================#
+        self.aLTextToSpeech = session.service("ALTextToSpeech")
+        self.aLTextToSpeech.setLanguage("English")
+        self.aLTextToSpeech.setParameter("volume", 100)
+        self.aLTextToSpeech.setParameter("pitch", 100)
+        self.aLTextToSpeech.setParameter("speed",80)
 
         self.sub = self.create_subscription(String, 'speech_to_text', self.callback, 10)
 
