@@ -7,7 +7,7 @@ package_name = 'dialog_pepper'
 setup(
     name=package_name,
     version='0.0.0',
-    packages=find_packages(exclude=['test']),
+    packages=find_packages(where='scripts', exclude=['test']),
     data_files=[
         ('share/' + package_name, ['package.xml']),
     ],
