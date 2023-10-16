@@ -62,7 +62,7 @@ class Intent(Node):
             to_say = ''
             if len(say_dict_lst) == 1:
                 dic = say_dict_lst[0]
-                to_say = f"I will peform the task of {dic['intent']} with the arguments"
+                to_say = f"I will peform the task of '{dic['intent']}' with the arguments"
                 dic.pop('intent')
                 for k,v in dic.items():
                     if k == 'dest':
@@ -80,7 +80,7 @@ class Intent(Node):
             else:
                 for i, dic in enumerate(say_dict_lst):
                     if i == 0:
-                        to_say = f"First, I will peform the task {dic['intent']} with the arguments "
+                        to_say = f"First, I will peform the task '{dic['intent']}' with the arguments "
                         # to_say = f"I am going to do the task of {dic['intent']} in the first task"
                         dic.pop('intent')
                         for k,v in dic.items():
@@ -96,7 +96,7 @@ class Intent(Node):
                                 key = 'object'
                             to_say += f' {key} : {v} ; '
                     if i == 1:
-                        to_say += f". Second, I will peform the task {dic['intent']} with the arguments "
+                        to_say += f". Second, I will peform the task '{dic['intent']}' with the arguments "
                         dic.pop('intent')
                         for k,v in dic.items():
                             if k == 'dest':
@@ -112,7 +112,7 @@ class Intent(Node):
                             to_say += f' {key} : {v} ; '
 
                     if i == 2:
-                        to_say += f". Third, I will peform the task {dic['intent']} with the arguments "
+                        to_say += f". Third, I will peform the task '{dic['intent']}' with the arguments "
                         dic.pop('intent')
                         for k,v in dic.items():
                             if k == 'dest':
