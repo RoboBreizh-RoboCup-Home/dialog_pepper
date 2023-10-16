@@ -83,7 +83,7 @@ def setBooleanInDBFalse():
     conn.commit()
     conn.close()
 
-def setBooleanInDBTrue(self):
+def setBooleanInDBTrue():
     """
     set the process as done via the boolean value in the db
     """
