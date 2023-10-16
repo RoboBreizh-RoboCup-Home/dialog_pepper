@@ -1,6 +1,7 @@
 import numpy as np
 import sqlite3
 from ament_index_python.packages import get_package_share_directory
+import os
 
 #########################################################################################
 # TERMINAL color
@@ -16,7 +17,10 @@ CYAN = '\033[96m'
 DB_PATH = "/home/nao/robobreizh/roboBreizhDb.db"
 
 def get_pkg_path():
-    return(get_package_share_directory('dialog_pepper'))
+    # get current path of this script
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    current_path = os.path.join(current_path, '..')
+    return(current_path)
 
 def getvalue():
     """

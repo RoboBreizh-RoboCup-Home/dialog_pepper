@@ -20,16 +20,6 @@ from rclpy.node import Node
 from std_msgs.msg import String
 import rclpy
 
-def handler(signum, frame):
-    # deallocate memory to avoid segfault
-    MySpeechToText.ALAudioDevice.unsubscribe(
-        MySpeechToText.module_name)
-    exit(1)
-
-
-signal.signal(signal.SIGINT, handler)
-
-
 class SpeechToText(Node):
     def __init__(self, app):
         super().__init__('stt_node')
@@ -203,6 +193,14 @@ def main():
     MySpeechToText = SpeechToText(app) 
     app.session.registerService(
         "SpeechToIntentSrv", MySpeechToText)
+    
+    def handler(signum, frame):
+        # deallocate memory to avoid segfault
+        MySpeechToText.ALAudioDevice.unsubscribe(
+            MySpeechToText.module_name)
+        exit(1)
+
+    signal.signal(signal.SIGINT, handler)
 
     MySpeechToText.start_sti_srv()
 
