@@ -62,7 +62,7 @@ class SpeechToText(Node):
         # ROS publisher for the speech to text
         self.pub = self.create_publisher(String, 'speech_to_text', 10)
 
-    def recognize_text(self, time_out=10):
+    def recognize_text(self, time_out=15):
         """
         Thread that reads the queue being filled by processRemote function
         """
