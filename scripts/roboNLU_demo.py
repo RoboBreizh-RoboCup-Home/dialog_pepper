@@ -1,5 +1,4 @@
 
-from TranscriptIntent import Intent
 from dialog_utils.utils import *
 import time
 from predict_robot import CommandProcessor

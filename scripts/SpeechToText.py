@@ -147,7 +147,7 @@ class SpeechToText(Node):
 
     def start_sti_srv(self):
         removeValue()
-        input()
+        input("**************** Press Enter to start the speech to text service... ****************")
         setBooleanInDBTrue()
         try:
             while True:
