@@ -3,13 +3,18 @@ from TranscriptIntent import Intent
 from dialog_utils.utils import *
 import time
 from predict_robot import CommandProcessor
-import os
+import os, sys
 import spacy
 import ast
 import re
+from std_msgs.msg import String
+import rclpy
+from rclpy.node import Node
 
-class Intent():
+class Intent(Node):
     def __init__(self):
+        super().__init__('demo_NLU_node')
+
         model_name='distil_bert'
         model_path = os.path.join(get_pkg_path(), 'scripts/quantized_models/distil_bert.onnx')
         slot_classifier_path = os.path.join(get_pkg_path(), 'scripts/numpy_para/slot_classifier')
@@ -22,7 +27,9 @@ class Intent():
         self.module_name = "TranscriptIntent"
         self.spacy_descr = spacy.load('en_core_web_sm')
 
-    def predict(self, req):
+        self.sub = self.create_subscription(String, 'speech_to_text', self.callback, 10)
+
+    def callback(self, req):
         # sti ros service callback
         try:
             print(B+"[Robobreizh - Dialog] Parsing intent..."+W)
@@ -325,19 +332,17 @@ class Intent():
             raise e
         
 def main():
+    rclpy.init(args=sys.argv)
+
     transcipt_intent = Intent()
 
-    while True:
-        transcript =  getvalue()
-        if transcript != "":
-            if not isBooleanInDBTrue():
-                print("Transcript: " + transcript)
-                transcipt_intent.predict(transcript)
-                break
-            break
-        print("Waiting for the sound processing to be done")
-        time.sleep(1)
-
+    try:
+        rclpy.spin(transcipt_intent)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        transcipt_intent.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == "__main__":
     main()

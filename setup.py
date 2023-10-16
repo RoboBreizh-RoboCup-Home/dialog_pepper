@@ -20,7 +20,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'roboNLU_demo = scripts.roboNLU_demo:main'
+            'roboNLU_demo = scripts.roboNLU_demo:main',
+            'SpeechToText = scripts.SpeechToText:main',
+            'TranscriptIntent = scripts.TranscriptIntent:main',
         ],
     },
 )

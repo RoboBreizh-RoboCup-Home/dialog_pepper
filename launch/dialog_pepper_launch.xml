@@ -3,12 +3,14 @@
 	<arg name="gpsr" default="true"/>
 
     <group if="$(var pepper)">
-        <node pkg="dialog_pepper" exec="SpeechToText.py" name="speech_to_text" output="screen"/>
+        <node pkg="dialog_pepper" exec="SpeechToText" name="speech_to_text" output="screen"/>
+        <node pkg="dialog_pepper" exec="roboNLU_demo" name="roboNLU_demo" output="screen"/>
+
         <!-- <node pkg="dialog_pepper" type="TTS.py" name="tts" output="screen"/> -->
-        <node pkg="dialog_pepper" exec="TranscriptIntent.py" name="transcript_intent" output="screen"/>
+        <!-- <node pkg="dialog_pepper" exec="TranscriptIntent" name="transcript_intent" output="screen"/> -->
         <!-- <node pkg="dialog_pepper" type="ParserFromFile.py" name="parser_from_file" output="screen"/> -->
 	</group>
     <group unless="$(var pepper)">
-        <node pkg="dialog_pepper" exec="whisper.py" name="whisper" output="screen"/>
+        <node pkg="dialog_pepper" exec="whisper" name="whisper" output="screen"/>
 	</group>
 </launch>

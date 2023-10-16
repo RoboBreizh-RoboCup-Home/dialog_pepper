@@ -16,6 +16,9 @@ import threading
 from datetime import datetime
 import json
 
+from rclpy.node import Node
+from std_msgs.msg import String
+import rclpy
 
 def handler(signum, frame):
     # deallocate memory to avoid segfault
@@ -27,8 +30,10 @@ def handler(signum, frame):
 signal.signal(signal.SIGINT, handler)
 
 
-class SpeechToText():
+class SpeechToText(Node):
     def __init__(self, app):
+        super().__init__('stt_node')
+
         app.start()
         session = app.session
         print("Connected to pepper session")
@@ -40,12 +45,6 @@ class SpeechToText():
         self.SampleRate = 48000
         self.Channels = 4
 
-        self.init()
-
-    def init(self):
-        """
-        Initialize variables for microphones and VOSK Recognizer
-        """
         #=============== Lists to save the sound data ================#
         self.queueSize = 7
         self.previous_sound_data = Queue(self.queueSize)
@@ -67,6 +66,9 @@ class SpeechToText():
 
         t1 = datetime.now()
         self.total_t = t1-t1
+
+        # ROS publisher for the speech to text
+        self.pub = self.create_publisher(String, 'speech_to_text', 10)
 
     def recognize_text(self):
         """
@@ -108,6 +110,7 @@ class SpeechToText():
                     print(f'inference time: {self.total_t}')
                     print(
                         f"{B}[RZH - Dialog] Recognized text: {W}{result_text}")
+                    self.pub.publish(String(data=result_text))
                     # Write value inside database
                     writeValue(result_text)
                     setBooleanInDBFalse()
@@ -194,13 +197,15 @@ if __name__ == "__main__":
         sys.exit(1)
     #/////////////////////////////////////////////////////////////#
 
-    #============= Running spekaker's recognition ===============#
-    MySpeechToText = SpeechToText(app)
+    rclpy.init()
 
+    MySpeechToText = SpeechToText(app) 
     app.session.registerService(
         "SpeechToIntentSrv", MySpeechToText)
 
     MySpeechToText.start_sti_srv()
+
+
 
 #=====================================================================================================================#
 #=====================================================================================================================#
