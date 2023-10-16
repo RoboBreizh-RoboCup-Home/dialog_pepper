@@ -20,6 +20,8 @@ from rclpy.node import Node
 from std_msgs.msg import String
 import rclpy
 
+global START_TIME 
+START_TIME = time.time()
 class SpeechToText(Node):
     def __init__(self, app):
         super().__init__('stt_node')
@@ -60,7 +62,7 @@ class SpeechToText(Node):
         # ROS publisher for the speech to text
         self.pub = self.create_publisher(String, 'speech_to_text', 10)
 
-    def recognize_text(self):
+    def recognize_text(self, time_out=10):
         """
         Thread that reads the queue being filled by processRemote function
         """
@@ -69,8 +71,10 @@ class SpeechToText(Node):
         while not isRecognized:
             #not self.q.empty()
 
-            self.request = isBooleanInDBTrue()
-            if not self.request:
+            # self.request = isBooleanInDBTrue()
+            current_time = time.time()
+            global START_TIME
+            if current_time - START_TIME > time_out:
                 self.rec.Reset()
                 with self.q.mutex:
                     self.q.queue.clear()
@@ -103,7 +107,7 @@ class SpeechToText(Node):
                     self.pub.publish(String(data=result_text))
                     # Write value inside database
                     writeValue(result_text)
-                    setBooleanInDBFalse()
+                    # setBooleanInDBFalse()
                     self.request = False
                 else:
                     isRecognized = False
@@ -138,7 +142,10 @@ class SpeechToText(Node):
     def start_sti_srv(self):
         removeValue()
         input("**************** Press Enter to start the speech to text service... ****************")
-        setBooleanInDBTrue()
+        # setBooleanInDBTrue()
+        global START_TIME 
+        START_TIME = time.time()
+
         try:
             while True:
                 if self.request:
@@ -153,7 +160,7 @@ class SpeechToText(Node):
                         time.sleep(0.1)
                     self.ALAudioDevice.unsubscribe(self.module_name)
                 time.sleep(0.2)
-                self.request = isBooleanInDBTrue()
+                # self.request = isBooleanInDBTrue()
         except Exception as e:
             raise e
 

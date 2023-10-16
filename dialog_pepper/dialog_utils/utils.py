@@ -93,7 +93,7 @@ def setBooleanInDBTrue():
     """
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    r = cur.execute("update dialog set run = 1 where id = 1")
+    cur.execute("update dialog set run = 1 where id = 1")
     conn.commit()
     conn.close()
 
