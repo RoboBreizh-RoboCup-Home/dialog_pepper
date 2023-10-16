@@ -15,11 +15,11 @@ class Intent(Node):
         super().__init__('demo_NLU_node')
 
         model_name='distil_bert'
-        model_path = os.path.join(get_pkg_path(), 'scripts/quantized_models/distil_bert.onnx')
-        slot_classifier_path = os.path.join(get_pkg_path(), 'scripts/numpy_para/slot_classifier')
+        model_path = os.path.join(get_pkg_path(), 'dialog_pepper/quantized_models/distil_bert.onnx')
+        slot_classifier_path = os.path.join(get_pkg_path(), 'dialog_pepper/numpy_para/slot_classifier')
         intent_token_classifier_path = os.path.join(
-            get_pkg_path(), 'scripts/numpy_para/intent_token_classifier')
-        pro_classifier_path = os.path.join(get_pkg_path(), 'scripts/numpy_para/pro_classifier')
+            get_pkg_path(), 'dialog_pepper/numpy_para/intent_token_classifier')
+        pro_classifier_path = os.path.join(get_pkg_path(), 'dialog_pepper/numpy_para/pro_classifier')
         self.parser = CommandProcessor(model_path=model_path, slot_classifier_path=slot_classifier_path,
                                        intent_token_classifier_path=intent_token_classifier_path,
                                        pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=model_name)
