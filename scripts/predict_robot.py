@@ -70,8 +70,6 @@ class CommandProcessor(object):
         self.quantized = quantized
         self.gpu = gpu
         self.model_name = model_name
-
-
        
         self.tokenizer_name = 'distilbert-base-uncased'
         # self.INTENT_CLASSES = ['PAD','O','B-greet','I-greet','B-guide','I-guide','B-follow','I-follow','B-find','I-find','B-take','I-take','B-go','I-go','B-know','I-know']
@@ -231,8 +229,7 @@ class CommandProcessor(object):
     def predict(self,lines):
         #lines = self.read_input_file()
 
-        sample, slot_label_mask, pro_labels_ids = self.convert_input_file_to_dataloader(
-            lines)
+        sample, slot_label_mask, pro_labels_ids = self.convert_input_file_to_dataloader(lines)
 
 
         start = time.time()

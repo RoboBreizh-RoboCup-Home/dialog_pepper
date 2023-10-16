@@ -17,6 +17,31 @@ def get_pkg_path():
     rp = rospkg.RosPack()
     return(rp.get_path('dialog_pepper'))
 
+def getvalue():
+    """
+    Write the transcript from the speech to text in the table dialog
+    """
+    conn = sqlite3.connect("/home/nao/robobreizh_pepper_ws/src/manager_pepper/manager_db/roboBreizhDb.db")
+    cur = conn.cursor()
+    cur.execute("SELECT transcript FROM speech ORDER BY speech.id DESC LIMIT 1")
+    value = cur.fetchall()
+    if value == []:
+        conn.close()
+        return ""
+    else:
+        conn.close()
+        return str(value[0][0])
+
+def removeValue():
+    """
+    Write the transcript from the speech to text in the table dialog
+    """
+    conn = sqlite3.connect("/home/nao/robobreizh_pepper_ws/src/manager_pepper/manager_db/roboBreizhDb.db")
+    cur = conn.cursor()
+    cur.execute("DELETE FROM speech")
+    conn.commit()
+    conn.close()
+
 def writeValue(transcript):
     """
     Write the transcript from the speech to text in the table dialog
@@ -50,6 +75,16 @@ def setBooleanInDBFalse():
     conn = sqlite3.connect("/home/nao/robobreizh_pepper_ws/src/manager_pepper/manager_db/roboBreizhDb.db")
     cur = conn.cursor()
     cur.execute("update dialog set run = 0 where id = 1")
+    conn.commit()
+    conn.close()
+
+def setBooleanInDBTrue(self):
+    """
+    set the process as done via the boolean value in the db
+    """
+    conn = sqlite3.connect("/home/nao/robobreizh_pepper_ws/src/manager_pepper/manager_db/roboBreizhDb.db")
+    cur = conn.cursor()
+    r = cur.execute("update dialog set run = 1 where id = 1")
     conn.commit()
     conn.close()
 

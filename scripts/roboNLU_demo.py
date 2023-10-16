@@ -1,20 +1,15 @@
-#!/user/bin python3
-import rospy
 
+from TranscriptIntent import Intent
 from dialog_utils.utils import *
-import os
-from robobreizh_msgs.srv import *
-# from dialog_pepper.srv import *
+import time
 from predict_robot import CommandProcessor
+import os
 import spacy
-import json
-import re
 import ast
-
-import qi
+import re
 
 class Intent():
-    def __init__(self, session):
+    def __init__(self):
         model_name='distil_bert'
         model_path = os.path.join(get_pkg_path(), 'scripts/quantized_models/distil_bert.onnx')
         slot_classifier_path = os.path.join(get_pkg_path(), 'scripts/numpy_para/slot_classifier')
@@ -27,16 +22,14 @@ class Intent():
         self.module_name = "TranscriptIntent"
         self.spacy_descr = spacy.load('en_core_web_sm')
 
-        self.aLAnimatedSpeech = session.service("ALAnimatedSpeech")
-
-    def intent_callback(self, req):
+    def predict(self, req):
         # sti ros service callback
         try:
-            rospy.loginfo(B+"[Robobreizh - Dialog] Parsing intent..."+W)
+            print(B+"[Robobreizh - Dialog] Parsing intent..."+W)
 
-            raw_request = req.transcript.split()
+            raw_request = req.split()
 
-            parser_intent = self.parser.predict(req.transcript.replace(", "," , ").split())
+            parser_intent = self.parser.predict(req.replace(", "," , ").split())
             # print(f'model output: {parser_intent}')
 
 
@@ -46,7 +39,7 @@ class Intent():
             to_say = ''
             if len(say_dict_lst) == 1:
                 dic = say_dict_lst[0]
-                to_say = f"I am going to do the task of {dic['intent']}"
+                to_say = f"I will peform the task of {dic['intent']} with the arguments"
                 dic.pop('intent')
                 for k,v in dic.items():
                     if k == 'dest':
@@ -59,10 +52,10 @@ class Intent():
                         key = 'what to say'
                     elif k == 'obj':
                         key = 'object'
-                    to_say += f' and the {key} is {v}'
+                    to_say += f' {key} : {v} ; '
 
             else:
-                for i,dic in enumerate(say_dict_lst):
+                for i, dic in enumerate(say_dict_lst):
                     if i == 0:
                         to_say = f"First, I will peform the task {dic['intent']} with the arguments "
                         # to_say = f"I am going to do the task of {dic['intent']} in the first task"
@@ -327,57 +320,24 @@ class Intent():
                     # else:
                     task_descr_lst[i] = task_dict_copy_string
             parser_intent = '\n'.join(task_descr_lst)
-            
-            
 
-
-            # print(parser_intent)
-            rospy.loginfo(B+"[Robobreizh - Dialog] Parsing Done..."+W)
-            rospy.loginfo(
-                B+"[Robobreizh - Dialog] Recognized text: " + W + parser_intent)
-
-            if len(parser_intent) == 0:
-                raise rospy.ServiceException
-
-            parser_intent = parser_intent.split("\n")
-
-            return TranscriptIntentResponse(parser_intent)
         except Exception as e:
             raise e
+        
+def main():
+    transcipt_intent = Intent()
 
-    def sendReady(self):
-        """
-        TO DO : set this function in the appropriate process or find a way for the manager to tell when everything is loaded
-        This process used to be the one to load the slowest thus it would return say that the manager is ready
-        """
-        pass
-        # rospy.wait_for_service('/robobreizh/dialog_pepper/text_to_speech')
-        # try:
-        #     tts = rospy.ServiceProxy(
-        #         '/robobreizh/dialog_pepper/text_to_speech', Msg)
-        #     tts("Everything is loaded, you can now send the plan")
-        #     return
-        # except rospy.ServiceException as e:
-        #     print("Service call failed: %s" % e)
-
-    def start_wti_srv(self):
-        # starts ros service node
-
-        rospy.init_node(self.module_name, anonymous=True)
-        rospy.Service('/robobreizh/dialog_pepper/transcript_intent',
-                      TranscriptIntent, self.intent_callback)
-        rospy.loginfo(B+"[Robobreizh - Dialog] Wav to intent server started"+W)
-        rospy.spin()
+    while True:
+        transcript =  getvalue()
+        if transcript != "":
+            if not isBooleanInDBTrue():
+                print("Transcript: " + transcript)
+                transcipt_intent.predict(transcript)
+                break
+            break
+        print("Waiting for the sound processing to be done")
+        time.sleep(1)
 
 
 if __name__ == "__main__":
-    session = qi.Session()
-    try:
-        session.connect("tcp://localhost:9559")
-    except RuntimeError:
-        print("Can't connect to Naoqi")
-        sys.exit(1)
-
-    # pass
-    transcipt_intent = Intent(session)
-    transcipt_intent.start_wti_srv()
+    main()

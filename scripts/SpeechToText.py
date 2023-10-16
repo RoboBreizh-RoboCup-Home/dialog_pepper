@@ -143,6 +143,9 @@ class SpeechToText():
             f"{B}[Robobreizh - Dialog]The speech processing thread just ended =D {W}")
 
     def start_sti_srv(self):
+        removeValue()
+        input()
+        setBooleanInDBTrue()
         try:
             while True:
                 if self.request:
