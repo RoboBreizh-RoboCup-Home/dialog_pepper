@@ -39,9 +39,9 @@ class Intent(Node):
         #===================== Set ALTextToSpeech ====================#
         self.aLTextToSpeech = session.service("ALTextToSpeech")
         self.aLTextToSpeech.setLanguage("English")
-        self.aLTextToSpeech.setParameter("volume", 130)
+        self.aLTextToSpeech.setParameter("volume", 180)
         self.aLTextToSpeech.setParameter("pitch", 100)
-        self.aLTextToSpeech.setParameter("speed", 80)
+        self.aLTextToSpeech.setParameter("speed", 70)
 
         self.sub = self.create_subscription(String, 'speech_to_text', self.callback, 10)
 
