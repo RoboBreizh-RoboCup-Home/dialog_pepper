@@ -6,7 +6,7 @@ import numpy as np
 import qi
 import sys
 
-import whisper
+import whispercpp
 import os
 
 import json

@@ -70,8 +70,6 @@ class SpeechToText(Node):
         isRecognized = False
         while not isRecognized:
             #not self.q.empty()
-
-            # self.request = isBooleanInDBTrue()
             current_time = time.time()
             global START_TIME
             if current_time - START_TIME > time_out:
@@ -138,31 +136,31 @@ class SpeechToText(Node):
 
         print(
             f"{B}[Robobreizh - Dialog]The speech processing thread just ended =D {W}")
+        self.request = False
 
     def start_sti_srv(self):
-        removeValue()
-        input("**************** Press Enter to start the speech to text service... ****************")
-        # setBooleanInDBTrue()
-        global START_TIME 
-        START_TIME = time.time()
+        while True:
+            res = input("**************** Press Enter to start the speech to text service, q to exit ****************")
+            if res == 'q':
+                exit(1)
+            else:
+                self.request = True
+            global START_TIME 
+            START_TIME = time.time()
 
-        try:
-            while True:
-                if self.request:
-                    self.ALAudioDevice.setClientPreferences(
-                        self.module_name, self.SampleRate, self.Channels, 0)
-                    self.ALAudioDevice.subscribe(self.module_name)
-                    time.sleep(1)
-                    self.reco_thread = threading.Thread(
-                        target=self.recognize_text)
-                    self.reco_thread.start()
-                    while self.request:
-                        time.sleep(0.1)
-                    self.ALAudioDevice.unsubscribe(self.module_name)
-                time.sleep(0.2)
-                # self.request = isBooleanInDBTrue()
-        except Exception as e:
-            raise e
+            if self.request:
+                self.ALAudioDevice.setClientPreferences(
+                    self.module_name, self.SampleRate, self.Channels, 0)
+                self.ALAudioDevice.subscribe(self.module_name)
+                time.sleep(1)
+                self.reco_thread = threading.Thread(
+                    target=self.recognize_text)
+                self.reco_thread.start()
+                while self.request:
+                    time.sleep(0.1)
+                self.ALAudioDevice.unsubscribe(self.module_name)
+            time.sleep(0.2)
+
 
     def processRemote(self, nbOfChannels, nbOfSamplesByChannel, timeStamp, inputBuffer):
         """
