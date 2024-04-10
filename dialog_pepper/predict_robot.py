@@ -3,11 +3,9 @@ import os
 os.environ['CURL_CA_BUNDLE'] = ''
 
 import time
-import onnxruntime
 import tflite_runtime.interpreter as tflite
 import numpy as np
 from transformers import BertTokenizer
-# from onnxruntime_tools import optimizer
 
 from transformers import AutoTokenizer
 from numpy import load
@@ -118,6 +116,7 @@ class CommandProcessor(object):
         self.pro_classifier = pro_classifier_np(f'/{pro_classifier_path}')
 
     def initONNX(self, path):
+        import onnxruntime
         start = time.time()
         sess_options = onnxruntime.SessionOptions()
 
