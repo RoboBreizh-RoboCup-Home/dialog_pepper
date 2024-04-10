@@ -16,14 +16,18 @@ class Intent(Node):
         super().__init__('demo_NLU_node')
 
         model_name='distil_bert'
-        model_path = os.path.join(get_pkg_path(), 'dialog_pepper/quantized_models/distil_bert.onnx')
+        engine='tflite'
+        if engine == 'tflite':
+            model_path = os.path.join(get_pkg_path(), 'dialog_pepper/quantized_models/distil_bert.tflite')
+        elif engine == 'onnx':
+            model_path = os.path.join(get_pkg_path(), 'dialog_pepper/quantized_models/distil_bert.onnx')
         slot_classifier_path = os.path.join(get_pkg_path(), 'dialog_pepper/numpy_para/slot_classifier')
         intent_token_classifier_path = os.path.join(
             get_pkg_path(), 'dialog_pepper/numpy_para/intent_token_classifier')
         pro_classifier_path = os.path.join(get_pkg_path(), 'dialog_pepper/numpy_para/pro_classifier')
         self.parser = CommandProcessor(model_path=model_path, slot_classifier_path=slot_classifier_path,
                                        intent_token_classifier_path=intent_token_classifier_path,
-                                       pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=model_name)
+                                       pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=model_name, engine="tflite")
         self.module_name = "TranscriptIntent"
         self.spacy_descr = spacy.load('en_core_web_sm')
 
@@ -33,6 +37,8 @@ class Intent(Node):
         except RuntimeError:
             print("Can't connect to Naoqi")
             sys.exit(1)
+
+        self.vocab = {'dest': 'destination', 'per': 'person', 'sour': 'source', 'what': 'what to say', 'obj': 'object'}
 
         self.aLAnimatedSpeech = session.service("ALAnimatedSpeech")
 
@@ -67,17 +73,7 @@ class Intent(Node):
                 to_say = f"I will peform the task of '{dic['intent']}' with the arguments"
                 dic.pop('intent')
                 for k,v in dic.items():
-                    if k == 'dest':
-                        key = 'destination'
-                    elif k == 'per':
-                        key = 'person'
-                    elif k == 'sour':
-                        key = 'source'
-                    elif k == 'what':
-                        key = 'what to say'
-                    elif k == 'obj':
-                        key = 'object'
-                    to_say += f' {key} : {v} ; '
+                    to_say += f' {self.vocab[k]} : {v} ; '
 
             else:
                 for i, dic in enumerate(say_dict_lst):
@@ -86,55 +82,25 @@ class Intent(Node):
                         # to_say = f"I am going to do the task of {dic['intent']} in the first task"
                         dic.pop('intent')
                         for k,v in dic.items():
-                            if k == 'dest':
-                                key = 'destination'
-                            elif k == 'per':
-                                key = 'person'
-                            elif k == 'sour':
-                                key = 'source'
-                            elif k == 'what':
-                                key = 'what to say'
-                            elif k == 'obj':
-                                key = 'object'
-                            to_say += f' {key} : {v} ; '
+                            to_say += f' {self.vocab[k]} : {v} ; '
+
                     if i == 1:
                         to_say += f". Second, I will peform the task '{dic['intent']}' with the arguments "
                         dic.pop('intent')
                         for k,v in dic.items():
-                            if k == 'dest':
-                                key = 'destination'
-                            elif k == 'per':
-                                key = 'person'
-                            elif k == 'sour':
-                                key = 'source'
-                            elif k == 'what':
-                                key = 'what to say'
-                            elif k == 'obj':
-                                key = 'object'
-                            to_say += f' {key} : {v} ; '
+                            to_say += f' {self.vocab[k]} : {v} ; '
 
                     if i == 2:
                         to_say += f". Third, I will peform the task '{dic['intent']}' with the arguments "
                         dic.pop('intent')
                         for k,v in dic.items():
-                            if k == 'dest':
-                                key = 'destination'
-                            elif k == 'per':
-                                key = 'person'
-                            elif k == 'sour':
-                                key = 'source'
-                            elif k == 'what':
-                                key = 'what to say'
-                            elif k == 'obj':
-                                key = 'object'
-                            to_say += f' {key} : {v} ; '
+                            to_say += f' {self.vocab[k]} : {v} ; '
            
 
             print(f'to say: {to_say}')
 
             self.aLAnimatedSpeech.say(to_say)
             #-----------------------------------------------------
-
 
             new_names_2023 = ['Adel', 'Angel', 'Axel', 'Charlie', 'Jane', 'Jules', 'Morgan', 'Paris', 'Robin', 'Simone']
 
@@ -275,14 +241,14 @@ class Intent(Node):
                         print('words:', words)
                         doc = self.spacy_descr(words)
                         dep_lst = [token.dep_ for token in doc]
-                        print(dep_lst)
+                        # print(dep_lst)
                         if ' '.join(dep_lst[:6]) == 'ROOT prep det pobj prep det':
                             task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
                             if dep_lst[-2] != 'det':
                                 task_dict_copy.update({'dest' : ' '.join(words.split()[-2:])})
                             else:
                                 task_dict_copy.update({'dest' : words.split()[-1]})
-                        print(task_dict_copy)
+                        # print(task_dict_copy)
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
 

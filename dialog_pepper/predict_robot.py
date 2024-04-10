@@ -4,6 +4,7 @@ os.environ['CURL_CA_BUNDLE'] = ''
 
 import time
 import onnxruntime
+import tflite_runtime.interpreter as tflite
 import numpy as np
 from transformers import BertTokenizer
 # from onnxruntime_tools import optimizer
@@ -62,7 +63,7 @@ class pro_classifier_np():
 
 class CommandProcessor(object):
     def __init__(self,model_path,slot_classifier_path,intent_token_classifier_path,
-                  pro_classifier_path,quantized = True, gpu = False,model_name = 'distil_bert'):
+                  pro_classifier_path,quantized = True, gpu = False,model_name = 'distil_bert', engine="onnx"):
         self.model_path = model_path
         self.slot_classifier_path = slot_classifier_path
         self.intent_token_classifier_path = intent_token_classifier_path
@@ -70,6 +71,7 @@ class CommandProcessor(object):
         self.quantized = quantized
         self.gpu = gpu
         self.model_name = model_name
+        self.engine = engine
        
         self.tokenizer_name = 'distilbert-base-uncased'
         # self.INTENT_CLASSES = ['PAD','O','B-greet','I-greet','B-guide','I-guide','B-follow','I-follow','B-find','I-find','B-take','I-take','B-go','I-go','B-know','I-know']
@@ -104,7 +106,11 @@ class CommandProcessor(object):
         #     self.output_file = f'models_outputs/{model_name}_onnx_outputs'
 
         # TODO the following paths should be arguments set from the class constructor
-        self.bert_ort_session = self.initONNX(f'{model_path}')
+        if self.engine == "onnx":
+            self.bert_ort_session = self.initONNX(f'{model_path}')
+        elif engine== "tflite":
+            self.bert_tflite, self.input_details, self.output_details = self.initTFLite(f'{model_path}')
+
         self.slot_classifier = slot_classifier_np(
             f'{slot_classifier_path}')
         self.intent_token_classifier = intent_token_classifier_np(
@@ -135,6 +141,16 @@ class CommandProcessor(object):
         print("Loading time ONNX: ", time.time() - start)
         return ort_session
 
+    def initTFLite(self, path):
+        start = time.time()
+        interpreter = tflite.Interpreter(model_path=path)
+        interpreter.allocate_tensors()
+        input_details = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
+        print("Loading time TFLite: ", time.time() - start)
+
+        return interpreter, input_details, output_details
+    
     # def read_input_file(self):
     #     with open(self.input_text_path, "r", encoding="utf-8") as f:
     #         words = f.readline().strip().split()
@@ -234,7 +250,13 @@ class CommandProcessor(object):
 
         start = time.time()
 
-        sequence_output= self.bert_ort_session.run(None, sample)
+        if self.engine == "onnx":
+            sequence_output = self.bert_ort_session.run(None, sample)
+        elif self.engine == "tflite":
+            self.bert_tflite.set_tensor(self.input_details[0]['index'], sample['input_ids'])
+            self.bert_tflite.set_tensor(self.input_details[1]['index'], sample['attention_mask'])
+            self.bert_tflite.invoke()
+            sequence_output = self.bert_tflite.get_tensor(self.output_details[0]['index'])
 
         # ============================= Slot prediction ==============================
         slot_logits = self.slot_classifier.forward(sequence_output)
