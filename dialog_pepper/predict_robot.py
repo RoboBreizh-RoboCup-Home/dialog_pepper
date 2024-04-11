@@ -234,10 +234,7 @@ class CommandProcessor(object):
         pro_labels_ids = np.array(pro_labels_ids).astype('int64')
         # sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,
         #                                                                             :], 'token_type_ids': token_type_ids[None, :]}
-
-        sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,:]}
-
-        sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,:]}
+        sample = {'input_ids': input_ids[None, :].astype(np.int64), 'attention_mask': attention_mask[None,:].astype(np.float32)}
 
         return sample, slot_label_mask, pro_labels_ids
 
