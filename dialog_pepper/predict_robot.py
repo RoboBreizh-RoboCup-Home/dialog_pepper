@@ -3,7 +3,6 @@ import os
 os.environ['CURL_CA_BUNDLE'] = ''
 
 import time
-import tflite_runtime.interpreter as tflite
 import numpy as np
 from transformers import BertTokenizer
 
@@ -129,9 +128,9 @@ class CommandProcessor(object):
         else:
             provider = 'CPUExecutionProvider'
 
-        print(provider)
+        print("ONNX provider: ", provider)
 
-        sess_options.intra_op_num_threads = 1  # 4
+        sess_options.intra_op_num_threads = 4  # 4
         sess_options.execution_mode = onnxruntime.ExecutionMode.ORT_PARALLEL
         sess_options.graph_optimization_level = onnxruntime.GraphOptimizationLevel.ORT_ENABLE_ALL
 
@@ -141,6 +140,8 @@ class CommandProcessor(object):
         return ort_session
 
     def initTFLite(self, path):
+        import tflite_runtime.interpreter as tflite
+
         start = time.time()
         interpreter = tflite.Interpreter(model_path=path)
         interpreter.allocate_tensors()
@@ -149,11 +150,6 @@ class CommandProcessor(object):
         print("Loading time TFLite: ", time.time() - start)
 
         return interpreter, input_details, output_details
-    
-    # def read_input_file(self):
-    #     with open(self.input_text_path, "r", encoding="utf-8") as f:
-    #         words = f.readline().strip().split()
-    #     return words
 
     def convert_input_file_to_dataloader(self, words,
                                          cls_token_segment_id=0,
@@ -184,7 +180,6 @@ class CommandProcessor(object):
             # Use the real label id for the first token of the word, and padding ids for the remaining tokens
             slot_label_mask.extend(
                 [self.pad_token_label_id + 1] + [self.pad_token_label_id] * (len(word_tokens) - 1))
-            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             pro_labels_ids.extend(
                 [pro_label] + [self.pad_token_label_id] * (len(word_tokens) - 1))
 
@@ -194,7 +189,6 @@ class CommandProcessor(object):
             tokens = tokens[: (self.max_seq_len - special_tokens_count)]
             slot_label_mask = slot_label_mask[:(
                 self.max_seq_len - special_tokens_count)]
-            # !!!!!!!!!!!!!!!!!!!!!!!!!!!
             pro_labels_ids = pro_labels_ids[:(
                 self.max_seq_len - special_tokens_count)]
 
@@ -202,15 +196,13 @@ class CommandProcessor(object):
         tokens += [sep_token]
         token_type_ids = [sequence_a_segment_id] * len(tokens)
         slot_label_mask += [self.pad_token_label_id]
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         pro_labels_ids += [self.pad_token_label_id]
 
         # Add [CLS] token
         tokens = [cls_token] + tokens
         token_type_ids = [cls_token_segment_id] + token_type_ids
         slot_label_mask = [self.pad_token_label_id] + slot_label_mask
-        pro_labels_ids = [self.pad_token_label_id] + \
-            pro_labels_ids  # !!!!!!!!!!!!!!!!!!!!!!!
+        pro_labels_ids = [self.pad_token_label_id] + pro_labels_ids
         input_ids = tokenizer.convert_tokens_to_ids(tokens)
 
         # The mask has 1 for real tokens and 0 for padding tokens. Only real tokens are attended to.
@@ -232,17 +224,17 @@ class CommandProcessor(object):
         attention_mask = np.array(attention_mask).astype('int64')
         token_type_ids = np.array(token_type_ids).astype('int64')
         pro_labels_ids = np.array(pro_labels_ids).astype('int64')
-        # sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,
-        #                                                                             :], 'token_type_ids': token_type_ids[None, :]}
-        sample = {'input_ids': input_ids[None, :].astype(np.int64), 'attention_mask': attention_mask[None,:].astype(np.float32)}
+
+        if self.model_name == 'distil_bert':
+            sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None,:]}
+        else:
+            sample = {'input_ids': input_ids[None, :], 'attention_mask': attention_mask[None, :], 'token_type_ids': token_type_ids[None, :]}
 
         return sample, slot_label_mask, pro_labels_ids
 
     def predict(self,lines):
-        #lines = self.read_input_file()
 
         sample, slot_label_mask, pro_labels_ids = self.convert_input_file_to_dataloader(lines)
-
 
         start = time.time()
 
@@ -250,7 +242,10 @@ class CommandProcessor(object):
             sequence_output = self.bert_ort_session.run(None, sample)
         elif self.engine == "tflite":
             self.bert_tflite.set_tensor(self.input_details[0]['index'], sample['input_ids'])
-            self.bert_tflite.set_tensor(self.input_details[1]['index'], sample['attention_mask'])
+            self.bert_tflite.set_tensor(self.input_details[1]['index'], sample['attention_mask'].astype(np.float32))
+            if self.model_name != 'distil_bert':
+                self.bert_tflite.set_tensor(self.input_details[1]['index'], sample['attention_mask'].astype(np.int64))
+                self.bert_tflite.set_tensor(self.input_details[2]['index'], sample['token_type_ids'])
             self.bert_tflite.invoke()
             sequence_output = self.bert_tflite.get_tensor(self.output_details[0]['index'])
 
@@ -311,8 +306,7 @@ class CommandProcessor(object):
         return res
     
     def get_res(self, line):
-        token_lst = [ele[1:-1].split(':')
-                     for ele in line.split() if ele[0] == '[']
+        token_lst = [ele[1:-1].split(':') for ele in line.split() if ele[0] == "["]
         res = []
         # print(token_lst)
         for token in token_lst:

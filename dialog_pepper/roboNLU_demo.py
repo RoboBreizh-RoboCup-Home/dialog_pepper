@@ -15,19 +15,22 @@ class Intent(Node):
     def __init__(self):
         super().__init__('demo_NLU_node')
 
-        model_name='distil_bert'
-        engine='tflite'
-        if engine == 'tflite':
-            model_path = os.path.join(get_pkg_path(), 'dialog_pepper/quantized_models/distil_bert.tflite')
-        elif engine == 'onnx':
-            model_path = os.path.join(get_pkg_path(), 'dialog_pepper/quantized_models/distil_bert.onnx')
+        self.declare_parameter('model_name', 'distil_bert') 
+        self.declare_parameter('engine', 'onnx')    
+
+        self.model_name = self.get_parameter('model_name').value
+        self.engine = self.get_parameter('engine').value
+
+        if self.engine == 'tflite':
+            model_path = os.path.join(get_pkg_path(), f'dialog_pepper/quantized_models/{self.model_name}.tflite')
+        elif self.engine == 'onnx':
+            model_path = os.path.join(get_pkg_path(), f'dialog_pepper/quantized_models/{self.model_name}.onnx')
         slot_classifier_path = os.path.join(get_pkg_path(), 'dialog_pepper/numpy_para/slot_classifier')
-        intent_token_classifier_path = os.path.join(
-            get_pkg_path(), 'dialog_pepper/numpy_para/intent_token_classifier')
+        intent_token_classifier_path = os.path.join(get_pkg_path(), 'dialog_pepper/numpy_para/intent_token_classifier')
         pro_classifier_path = os.path.join(get_pkg_path(), 'dialog_pepper/numpy_para/pro_classifier')
         self.parser = CommandProcessor(model_path=model_path, slot_classifier_path=slot_classifier_path,
                                        intent_token_classifier_path=intent_token_classifier_path,
-                                       pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=model_name, engine="tflite")
+                                       pro_classifier_path=pro_classifier_path,quantized = False, gpu = False, model_name=self.model_name, engine=self.engine)
         self.module_name = "TranscriptIntent"
         self.spacy_descr = spacy.load('en_core_web_sm')
 
@@ -61,10 +64,7 @@ class Intent(Node):
             raw_request = req.split()
 
             parser_intent = self.parser.predict(req.replace(", "," , ").split())
-            # print(f'model output: {parser_intent}')
 
-
-            #----------------------------------------------------
             say_dict_lst = [ast.literal_eval(task) for task in parser_intent.split('\n')]
 
             to_say = ''
@@ -79,7 +79,6 @@ class Intent(Node):
                 for i, dic in enumerate(say_dict_lst):
                     if i == 0:
                         to_say = f"First, I will peform the task '{dic['intent']}' with the arguments "
-                        # to_say = f"I am going to do the task of {dic['intent']} in the first task"
                         dic.pop('intent')
                         for k,v in dic.items():
                             to_say += f' {self.vocab[k]} : {v} ; '
@@ -96,11 +95,9 @@ class Intent(Node):
                         for k,v in dic.items():
                             to_say += f' {self.vocab[k]} : {v} ; '
            
-
             print(f'to say: {to_say}')
 
             self.aLAnimatedSpeech.say(to_say)
-            #-----------------------------------------------------
 
             new_names_2023 = ['Adel', 'Angel', 'Axel', 'Charlie', 'Jane', 'Jules', 'Morgan', 'Paris', 'Robin', 'Simone']
 
@@ -120,7 +117,6 @@ class Intent(Node):
 
             task_lst = [parser_intent[b:e+1] for b,e in zip(begin_lst,end_lst)]
             task_descr_lst = task_lst.copy()
-
 
             for i,task in enumerate(task_lst):
                 task_dict = ast.literal_eval(task)
@@ -176,7 +172,6 @@ class Intent(Node):
 
                     if task_dict['intent'] == 'guide' and raw_request[-1] == 'back':
                         task_dict_copy['dest'] = "back"
-                    # ----------- haven't test this yet  ----------------------------------
 
                     if task_dict['intent'] == 'tell' and ' '.join(words.split()[:3]) == 'how many people':
                         task_dict_copy['intent'] = 'count'
@@ -201,17 +196,16 @@ class Intent(Node):
                         elif word_lst[2] == 'person':
                             words = ' '.join(word_lst[:2] + ['the'] + word_lst[2:])
 
-                        # print('words:', words)
                         doc = self.spacy_descr(words)
                         dep_lst = [token.dep_ for token in doc]
-                        # print(dep_lst)
+
                         if ' '.join(dep_lst[:6]) == 'ROOT prep det pobj prep det':
                             task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
                             if dep_lst[-2] != 'det':
                                 task_dict_copy.update({'dest' : ' '.join(words.split()[-2:])})
                             else:
                                 task_dict_copy.update({'dest' : words.split()[-1]})
-                        # print(task_dict_copy)
+
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
 
@@ -238,17 +232,15 @@ class Intent(Node):
                         elif word_lst[2] == 'person':
                             words = ' '.join(word_lst[:2] + ['the'] + word_lst[2:])
 
-                        print('words:', words)
                         doc = self.spacy_descr(words)
                         dep_lst = [token.dep_ for token in doc]
-                        # print(dep_lst)
                         if ' '.join(dep_lst[:6]) == 'ROOT prep det pobj prep det':
                             task_dict_copy.update({k : words.split()[dep_lst.index('ROOT')]})
                             if dep_lst[-2] != 'det':
                                 task_dict_copy.update({'dest' : ' '.join(words.split()[-2:])})
                             else:
                                 task_dict_copy.update({'dest' : words.split()[-1]})
-                        # print(task_dict_copy)
+
                         task_descr_lst[i] = str(task_dict_copy)
                         continue
 
@@ -311,6 +303,8 @@ class Intent(Node):
                     # else:
                     task_descr_lst[i] = task_dict_copy_string
             parser_intent = '\n'.join(task_descr_lst)
+
+            print(f'Final parsed intent: {task_dict_copy_string}')
 
         except Exception as e:
             raise e
